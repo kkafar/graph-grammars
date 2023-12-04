@@ -1,0 +1,8 @@
+.venv/
+.envrc
+.DS_Store
+*local.*
+*.local
+*.png
+*.dot
+__pycache__/
