@@ -27,10 +27,8 @@ def main():
     for (node_1, _), (node_2, _) in it.pairwise(bundles[:2]):
         subgraph.add_edge(node_1, node_2, attrs=None)
 
-    gm = nx.isomorphism.GraphMatcher(graph.nx_graph, subgraph.nx_graph)
-
     print('Mapping')
-    for mapping in gm.subgraph_isomorphisms_iter():
+    for mapping in graph.generate_subgraphs_isomorphic_with(subgraph):
         print(mapping)
 
     fig, plots = plt.subplots(nrows=1, ncols=2)
