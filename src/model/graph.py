@@ -69,7 +69,6 @@ class Graph:
         nx.draw_networkx(self.nx_graph, pos=positions, labels=node_labels, **kwargs)
         nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
 
-
     @property
     def nx_graph(self) -> nx.Graph:
         return self._graph
