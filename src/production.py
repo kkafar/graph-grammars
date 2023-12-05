@@ -30,8 +30,6 @@ class Production:
         :returns: bool is the production can be successfully applied, false if not"""
         raise NotImplementedError("This method must be overrided in subclasses")
 
-
-
     def apply(self, graph: Graph) -> bool:
         self.reset()
         lhs = self.get_lhs()
@@ -40,7 +38,6 @@ class Production:
                 self.apply_with_mapping(graph, mapping)
                 return True
         return False
-
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]) -> None:
         """ Implement the production by overriding this method.
@@ -53,6 +50,9 @@ class Production:
 
         Please note that this method is called only if `is_mapping_feasible` returned True for `mapping`."""
         raise NotImplementedError("This method must be overrided in subclasses")
+
+    def __call__(self, graph: Graph) -> bool:
+        return self.apply(graph)
 
 
 

@@ -55,8 +55,8 @@ def test_production():
     for node_1, node_2 in it.pairwise(nodes + [node_1]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
 
-    P1().apply(graph)
-    P1().apply(graph)
+    P1()(graph)
+    P1()(graph)
     # p1_instance = P1()
 
 
