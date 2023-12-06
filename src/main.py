@@ -52,8 +52,8 @@ def test_production():
 
     graph.add_node_collection(nodes)
 
-    graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=False)))
-    graph.add_edge(Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=False)))
+    graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+    graph.add_edge(Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True)))
 
     for node_1, node_2 in it.pairwise(nodes + [node_1]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))

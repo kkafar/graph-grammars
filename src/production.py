@@ -34,6 +34,7 @@ class Production:
         self.reset()
         lhs = self.get_lhs()
         for mapping in graph.generate_subgraphs_isomorphic_with(lhs):
+            print(mapping)
             if self.is_mapping_feasible(graph, mapping):
                 self.apply_with_mapping(graph, mapping)
                 return True
@@ -80,8 +81,8 @@ class P1(Production):
         nodes.append(node_0)
 
         # Add two edges of type Q
-        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=False)))
-        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=False)))
+        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
+        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
 
         for node_0, node_1 in it.pairwise(nodes):
             graph.add_edge(Edge(node_0.handle, node_1.handle, EdgeAttrs(kind='e', value=False)))
@@ -107,14 +108,19 @@ class P1(Production):
             return False
 
         # We still need to check whether the hyperedge in the cell centre has appropriate value,
+        edge_1_3 = graph.edge_for_handles(nodes[0].handle, nodes[2].handle)
+        if edge_1_3.attrs.kind != 'q' or edge_1_3.attrs.value is False:
+            return False
+
+        edge_2_4 = graph.edge_for_handles(nodes[1].handle, nodes[3].handle)
+        if edge_2_4.attrs.kind != 'q' or edge_2_4.attrs.value is False:
+            return False
+
         # Also we need to verify all the edges are of appropriate type
-        for lhs_edge in self.get_lhs().get_edges():
-            for g_edge in graph.get_edges():
-                if rev_mapping[lhs_edge[0]] == g_edge[0] and rev_mapping[lhs_edge[1]] == g_edge[1]:
-                    if lhs_edge[2]['payload'].kind != g_edge[2]['payload'].kind or \
-                            lhs_edge[2]['payload'].value != g_edge[2]['payload'].value:
-                        return False
-                    break
+        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
+            edge = graph.edge_for_handles(node_a.handle, node_b.handle)
+            if edge.attrs.kind != 'e':
+                return False
 
         return True
 
@@ -130,7 +136,6 @@ class P1(Production):
         ]
 
         new_nodes = []
-        print(nodes)
         for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
             x = (node_a.attrs.x + node_b.attrs.x) / 2
             y = (node_a.attrs.y + node_b.attrs.y) / 2
