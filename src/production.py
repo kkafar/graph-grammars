@@ -79,6 +79,10 @@ class P1(Production):
 
         nodes.append(node_0)
 
+        # Add two edges of type Q
+        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
+        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+
         for node_0, node_1 in it.pairwise(nodes):
             graph.add_edge(Edge(node_0.handle, node_1.handle, EdgeAttrs(kind='e', value=False)))
 
@@ -103,9 +107,19 @@ class P1(Production):
             return False
 
         # We still need to check whether the hyperedge in the cell centre has appropriate value,
-        # but it is not in the graph model yet.
+        edge_1_3 = graph.edge_for_handles(nodes[0].handle, nodes[2].handle)
+        if edge_1_3.attrs.kind != 'q' or edge_1_3.attrs.value is False:
+            return False
+
+        edge_2_4 = graph.edge_for_handles(nodes[1].handle, nodes[3].handle)
+        if edge_2_4.attrs.kind != 'q' or edge_2_4.attrs.value is False:
+            return False
 
         # Also we need to verify all the edges are of appropriate type
+        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
+            edge = graph.edge_for_handles(node_a.handle, node_b.handle)
+            if edge.attrs.kind != 'e':
+                return False
 
         return True
 
@@ -143,6 +157,16 @@ class P1(Production):
 
         for node in new_nodes:
             graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
+
+        # add Q edges
+        for node_a, node_b in zip(nodes[:2], nodes[2:]):
+            graph.remove_edge(node_a.handle, node_b.handle)
+
+        for node_a, node_b in it.pairwise(new_nodes + [new_nodes[0]]):
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False)))
+
+        for old_node in nodes:
+            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
 
         graph.display()
         plt.show()

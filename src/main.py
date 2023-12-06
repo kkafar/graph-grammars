@@ -48,9 +48,12 @@ def test_production():
     node_2 = Node(NodeAttrs('v', 1, 0, False))
     node_3 = Node(NodeAttrs('v', 1, 1, False))
     node_4 = Node(NodeAttrs('v', 0, 1, False))
-    nodes = [ node_1, node_2, node_3, node_4 ]
+    nodes = [node_1, node_2, node_3, node_4]
 
     graph.add_node_collection(nodes)
+
+    graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+    graph.add_edge(Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True)))
 
     for node_1, node_2 in it.pairwise(nodes + [node_1]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
