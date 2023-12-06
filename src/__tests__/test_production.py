@@ -27,7 +27,7 @@ class TestProduction1(unittest.TestCase):
 
         p1 = P1()
         mapping = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
-        assert p1.is_mapping_feasible(graph, next(mapping)) is True
+        self.assertTrue(p1.is_mapping_feasible(graph, next(mapping)))
 
     def test_production_can_be_applied_on_more_complex_graph(self):
         graph = Graph()
@@ -53,7 +53,7 @@ class TestProduction1(unittest.TestCase):
 
         p1 = P1()
         mapping = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
-        assert p1.is_mapping_feasible(graph, next(mapping)) is True
+        self.assertTrue(p1.is_mapping_feasible(graph, next(mapping)))
 
     def test_production_cannot_be_applied_if_R_false(self):
         graph = Graph()
@@ -74,7 +74,7 @@ class TestProduction1(unittest.TestCase):
 
         p1 = P1()
         mapping = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
-        assert p1.is_mapping_feasible(graph, next(mapping)) is False
+        self.assertFalse(p1.is_mapping_feasible(graph, next(mapping)))
 
     def test_production_cannot_be_applied_if_edge_types_not_match(self):
         graph = Graph()
@@ -96,4 +96,7 @@ class TestProduction1(unittest.TestCase):
 
         p1 = P1()
         mapping = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
-        assert p1.is_mapping_feasible(graph, next(mapping)) is False
+        self.assertFalse(p1.is_mapping_feasible(graph, next(mapping)))
+
+if __name__ == '__main__':
+    unittest.main()
