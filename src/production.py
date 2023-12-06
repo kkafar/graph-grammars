@@ -1,7 +1,7 @@
 import itertools as it
 import matplotlib.pyplot as plt
 import util
-from typing import Dict
+from typing import Dict, Iterable
 from model import NodeAttrs, EdgeAttrs, NodeHandle, Edge, Node
 from graph import Graph
 from pprint import pprint
@@ -55,6 +55,24 @@ class Production:
         return self.apply(graph)
 
 
+def verify_central_hyperedges(graph: 'Graph', nodes: list[Node]):
+    edge_1_3 = graph.edge_for_handles(nodes[0].handle, nodes[2].handle)
+    if edge_1_3.attrs.kind != 'q' or edge_1_3.attrs.value is False:
+        return False
+
+    edge_2_4 = graph.edge_for_handles(nodes[1].handle, nodes[3].handle)
+    if edge_2_4.attrs.kind != 'q' or edge_2_4.attrs.value is False:
+        return False
+    return True
+
+
+def verify_normal_edges_type(graph: 'Graph', nodes: list[Node]):
+    for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
+        edge = graph.edge_for_handles(node_a.handle, node_b.handle)
+        if edge.attrs.kind != 'e':
+            return False
+    return True
+
 
 class P1(Production):
     def __init__(self) -> None:
@@ -107,19 +125,12 @@ class P1(Production):
             return False
 
         # We still need to check whether the hyperedge in the cell centre has appropriate value,
-        edge_1_3 = graph.edge_for_handles(nodes[0].handle, nodes[2].handle)
-        if edge_1_3.attrs.kind != 'q' or edge_1_3.attrs.value is False:
-            return False
-
-        edge_2_4 = graph.edge_for_handles(nodes[1].handle, nodes[3].handle)
-        if edge_2_4.attrs.kind != 'q' or edge_2_4.attrs.value is False:
+        if not verify_central_hyperedges(graph, nodes):
             return False
 
         # Also we need to verify all the edges are of appropriate type
-        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
-            edge = graph.edge_for_handles(node_a.handle, node_b.handle)
-            if edge.attrs.kind != 'e':
-                return False
+        if not verify_normal_edges_type(graph, nodes):
+            return False
 
         return True
 
@@ -171,6 +182,7 @@ class P1(Production):
         graph.display()
         plt.show()
 
+
 class P2(Production):
     def __init__(self) -> None:
         self.lhs: Graph = self.__create_lhs()
@@ -208,8 +220,29 @@ class P2(Production):
 
 
     def is_mapping_feasible(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]) -> bool:
-        pass
+        # Now we have mapping of lhs nodes to `graph` nodes.
+        self.rev_mapping = util.reverse_dict_mapping(mapping)
 
+        # Aliasing for convenience
+        rev_mapping = self.rev_mapping
+
+        nodes = [
+            graph.node_for_handle(rev_mapping[i]) for i in range(0, 4)
+        ]
+
+        filtered_hanging_nodes = list(filter(lambda node: node.attrs.hanging, nodes))
+        if len(filtered_hanging_nodes) != 1:
+            return False
+
+        # Check whether the hyperedge in the cell centre has appropriate value
+        if not verify_central_hyperedges(graph, nodes):
+            return False
+
+        # Verify all the edges are of appropriate type
+        if not verify_normal_edges_type(graph, nodes):
+            return False
+
+        return True
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
        pass
