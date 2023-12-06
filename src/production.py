@@ -1,10 +1,15 @@
 import itertools as it
+from copy import deepcopy
+
 import matplotlib.pyplot as plt
 import util
 from typing import Dict, Iterable
 from model import NodeAttrs, EdgeAttrs, NodeHandle, Edge, Node
 from graph import Graph
 from pprint import pprint
+
+from utils import verify_central_hyperedges, verify_normal_edges_type, break_the_quadrangle
+
 
 class Production:
     """ Base class for all productions """
@@ -34,6 +39,7 @@ class Production:
         self.reset()
         lhs = self.get_lhs()
         for mapping in graph.generate_subgraphs_isomorphic_with(lhs):
+            print(mapping)
             if self.is_mapping_feasible(graph, mapping):
                 self.apply_with_mapping(graph, mapping)
                 return True
@@ -53,26 +59,6 @@ class Production:
 
     def __call__(self, graph: Graph) -> bool:
         return self.apply(graph)
-
-
-def verify_central_hyperedges(graph: 'Graph', nodes: list[Node]):
-    edge_1_3 = graph.edge_for_handles(nodes[0].handle, nodes[2].handle)
-    if edge_1_3.attrs.kind != 'q' or edge_1_3.attrs.value is False:
-        return False
-
-    edge_2_4 = graph.edge_for_handles(nodes[1].handle, nodes[3].handle)
-    if edge_2_4.attrs.kind != 'q' or edge_2_4.attrs.value is False:
-        return False
-    return True
-
-
-def verify_normal_edges_type(graph: 'Graph', nodes: list[Node]):
-    for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
-        edge = graph.edge_for_handles(node_a.handle, node_b.handle)
-        if edge.attrs.kind != 'e':
-            return False
-    return True
-
 
 class P1(Production):
     def __init__(self) -> None:
@@ -118,7 +104,7 @@ class P1(Production):
         rev_mapping = self.rev_mapping
 
         nodes = [
-            graph.node_for_handle(rev_mapping[i]) for i in range(0, 4)
+            graph.node_for_handle(rev_mapping[i]) for i in range(0, len(rev_mapping))
         ]
 
         if any(map(lambda node: node.attrs.hanging, nodes)):
@@ -139,45 +125,7 @@ class P1(Production):
         # Break the edges (1, 2), (2, 3), (3, 4), (4, 1), creating 4 new nodes
         # Add 5 new node to the center of the split
 
-        rev_mapping = self.rev_mapping
-
-        nodes = [
-            graph.node_for_handle(rev_mapping[i]) for i in range(0, 4)
-        ]
-
-        new_nodes = []
-        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
-            x = (node_a.attrs.x + node_b.attrs.x) / 2
-            y = (node_a.attrs.y + node_b.attrs.y) / 2
-            edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
-            h = not edge_attrs.value
-            new_node = Node(NodeAttrs('v', x, y, h))
-            new_nodes.append(new_node)
-
-            graph.remove_edge(node_a.handle, node_b.handle)
-            graph.add_node(new_node)
-            graph.add_edge(Edge(u=node_a.handle, v=new_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
-            graph.add_edge(Edge(u=new_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
-
-        # the central node
-        x = sum(map(lambda node: node.attrs.x, nodes)) / 4
-        y = sum(map(lambda node: node.attrs.y, nodes)) / 4
-        h = False
-        new_node = Node(NodeAttrs('v', x, y, h))
-        graph.add_node(new_node)
-
-        for node in new_nodes:
-            graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
-
-        # add Q edges
-        for node_a, node_b in zip(nodes[:2], nodes[2:]):
-            graph.remove_edge(node_a.handle, node_b.handle)
-
-        for node_a, node_b in it.pairwise(new_nodes + [new_nodes[0]]):
-            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False)))
-
-        for old_node in nodes:
-            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
+        break_the_quadrangle(graph, self.rev_mapping)
 
         graph.display()
         plt.show()
@@ -213,11 +161,10 @@ class P2(Production):
         for node_1, node_2 in it.pairwise(nodes + [node_0]):
             graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
 
-        graph.display()
-        plt.show()
+        # graph.display()
+        # plt.show()
 
         return graph
-
 
     def is_mapping_feasible(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]) -> bool:
         # Now we have mapping of lhs nodes to `graph` nodes.
@@ -227,7 +174,7 @@ class P2(Production):
         rev_mapping = self.rev_mapping
 
         nodes = [
-            graph.node_for_handle(rev_mapping[i]) for i in range(0, 4)
+            graph.node_for_handle(rev_mapping[i]) for i in rev_mapping.keys()
         ]
 
         filtered_hanging_nodes = list(filter(lambda node: node.attrs.hanging, nodes))
@@ -235,7 +182,9 @@ class P2(Production):
             return False
 
         # Check whether the hyperedge in the cell centre has appropriate value
-        if not verify_central_hyperedges(graph, nodes):
+        nodes_for_hyperedges_verification = deepcopy(nodes)
+        nodes_for_hyperedges_verification.remove(filtered_hanging_nodes[0])
+        if not verify_central_hyperedges(graph, nodes=nodes_for_hyperedges_verification):
             return False
 
         # Verify all the edges are of appropriate type
@@ -245,4 +194,9 @@ class P2(Production):
         return True
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
-       pass
+        break_the_quadrangle(graph, self.rev_mapping, )
+
+        graph.node_for_handle(self.rev_mapping[4]).attrs.hanging = False
+
+        graph.display()
+        plt.show()

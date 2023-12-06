@@ -65,16 +65,20 @@ def test_production():
 def test_production2():
     graph = Graph()
 
-    node_1 = Node(NodeAttrs('v', 0, 0, False))
-    node_2 = Node(NodeAttrs('v', 1, 0, False))
-    node_3 = Node(NodeAttrs('v', 1, 1, False))
-    node_4 = Node(NodeAttrs('v', 0, 1, False))
-    node_5 = Node(NodeAttrs('v', 1, 0.5, True))
-    nodes = [node_1, node_2, node_5, node_3, node_4]
+    node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
+    node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
+    node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
+    node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
+    node_4 = Node(NodeAttrs('v', 1, 0.5, True), 4)
+    nodes = [node_0, node_1, node_4, node_2, node_3]
 
     graph.add_node_collection(nodes)
 
-    for node_1, node_2 in it.pairwise(nodes + [node_1]):
+    # Add two edges of type Q
+    graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
+    graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+
+    for node_1, node_2 in it.pairwise(nodes + [node_0]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
 
     P2()(graph)
