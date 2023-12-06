@@ -146,3 +146,46 @@ class P1(Production):
 
         graph.display()
         plt.show()
+
+class P2(Production):
+    def __init__(self) -> None:
+        self.lhs: Graph = self.__create_lhs()
+        self.rev_mapping: Dict[NodeHandle, NodeHandle] | None = None
+
+    def get_lhs(self) -> Graph:
+        return self.lhs
+
+    def reset(self):
+        self.rev_mapping = None
+
+    def __create_lhs(self) -> Graph:
+        graph = Graph()
+
+        node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
+        node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
+        node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
+        node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
+        node_4 = Node(NodeAttrs('v', 1, 0.5, True), 4)
+        nodes = [node_0, node_1, node_4, node_2, node_3]
+
+        graph.add_node_collection(nodes)
+
+        # Add two edges of type Q
+        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
+        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+
+        for node_1, node_2 in it.pairwise(nodes + [node_0]):
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+
+        graph.display()
+        plt.show()
+
+        return graph
+
+
+    def is_mapping_feasible(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]) -> bool:
+        pass
+
+
+    def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
+       pass

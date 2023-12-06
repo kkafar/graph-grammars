@@ -4,7 +4,7 @@ import itertools as it
 import matplotlib.pyplot as plt
 from model import NodeHandle, NodeAttrs, EdgeAttrs, Node, Edge
 from graph import Graph
-from production import Production, P1
+from production import Production, P1, P2
 
 def main():
     graph = Graph()
@@ -59,8 +59,25 @@ def test_production():
     P1()(graph)
     # p1_instance = P1()
 
+def test_production2():
+    graph = Graph()
+
+    node_1 = Node(NodeAttrs('v', 0, 0, False))
+    node_2 = Node(NodeAttrs('v', 1, 0, False))
+    node_3 = Node(NodeAttrs('v', 1, 1, False))
+    node_4 = Node(NodeAttrs('v', 0, 1, False))
+    node_5 = Node(NodeAttrs('v', 1, 0.5, True))
+    nodes = [node_1, node_2, node_5, node_3, node_4]
+
+    graph.add_node_collection(nodes)
+
+    for node_1, node_2 in it.pairwise(nodes + [node_1]):
+        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+
+    P2()(graph)
+
 
 if __name__ == '__main__':
     plt.rcParams['figure.figsize'] = (16, 9)
-    test_production()
+    test_production2()
     # main()
