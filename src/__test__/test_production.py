@@ -98,5 +98,27 @@ class TestProduction1(unittest.TestCase):
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
         self.assertFalse(any(p1.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
 
+    def test_production_cannot_be_applied_if_exists_hanging_node(self):
+        graph = Graph()
+
+        node_1 = Node(NodeAttrs('v', 0, 0, False))
+        node_2 = Node(NodeAttrs('v', 1, 0, False))
+        node_3 = Node(NodeAttrs('v', 1, 1, False))
+        node_4 = Node(NodeAttrs('v', 0, 1, True))
+        nodes = [node_1, node_2, node_3, node_4]
+
+        graph.add_node_collection(nodes)
+
+        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+        graph.add_edge(Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True)))
+
+        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', value=False)))
+
+        p1 = P1()
+        mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
+        self.assertFalse(any(p1.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+
+
 if __name__ == '__main__':
     unittest.main()
