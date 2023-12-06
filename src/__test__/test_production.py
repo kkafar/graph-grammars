@@ -32,12 +32,12 @@ class TestProduction1(unittest.TestCase):
     def test_production_can_be_applied_on_more_complex_graph(self):
         graph = Graph()
 
-        node_1 = Node(NodeAttrs('v', 0, 0, False))
-        node_2 = Node(NodeAttrs('v', 0.5, 0, False))
-        node_3 = Node(NodeAttrs('v', 1, 0, False))
-        node_4 = Node(NodeAttrs('v', 1, 1, False))
-        node_5 = Node(NodeAttrs('v', 0.5, 1, False))
-        node_6 = Node(NodeAttrs('v', 0, 1, False))
+        node_1 = Node(NodeAttrs('v', 0, 0, False), 0)
+        node_2 = Node(NodeAttrs('v', 0.5, 0, False), 1)
+        node_3 = Node(NodeAttrs('v', 1, 0, False), 2)
+        node_4 = Node(NodeAttrs('v', 1, 1, False), 3)
+        node_5 = Node(NodeAttrs('v', 0.5, 1, False), 4)
+        node_6 = Node(NodeAttrs('v', 0, 1, False), 5)
         nodes = [node_1, node_2, node_3, node_4, node_5, node_6]
 
         graph.add_node_collection(nodes)
