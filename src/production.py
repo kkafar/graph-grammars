@@ -34,7 +34,6 @@ class Production:
         self.reset()
         lhs = self.get_lhs()
         for mapping in graph.generate_subgraphs_isomorphic_with(lhs):
-            print(mapping)
             if self.is_mapping_feasible(graph, mapping):
                 self.apply_with_mapping(graph, mapping)
                 return True
