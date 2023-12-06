@@ -84,3 +84,6 @@ class Graph:
     @property
     def nx_graph(self) -> nx.Graph:
         return self._graph
+
+    def get_edges(self) -> Iterable[Edge]:
+        return self.nx_graph.edges.data()

@@ -79,6 +79,10 @@ class P1(Production):
 
         nodes.append(node_0)
 
+        # Add two edges of type Q
+        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=False)))
+        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=False)))
+
         for node_0, node_1 in it.pairwise(nodes):
             graph.add_edge(Edge(node_0.handle, node_1.handle, EdgeAttrs(kind='e', value=False)))
 
@@ -103,9 +107,14 @@ class P1(Production):
             return False
 
         # We still need to check whether the hyperedge in the cell centre has appropriate value,
-        # but it is not in the graph model yet.
-
         # Also we need to verify all the edges are of appropriate type
+        for lhs_edge in self.get_lhs().get_edges():
+            for g_edge in graph.get_edges():
+                if rev_mapping[lhs_edge[0]] == g_edge[0] and rev_mapping[lhs_edge[1]] == g_edge[1]:
+                    if lhs_edge[2]['payload'].kind != g_edge[2]['payload'].kind or \
+                            lhs_edge[2]['payload'].value != g_edge[2]['payload'].value:
+                        return False
+                    break
 
         return True
 
@@ -121,6 +130,7 @@ class P1(Production):
         ]
 
         new_nodes = []
+        print(nodes)
         for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
             x = (node_a.attrs.x + node_b.attrs.x) / 2
             y = (node_a.attrs.y + node_b.attrs.y) / 2
@@ -143,6 +153,16 @@ class P1(Production):
 
         for node in new_nodes:
             graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
+
+        # add Q edges
+        for node_a, node_b in zip(nodes[:2], nodes[2:]):
+            graph.remove_edge(node_a.handle, node_b.handle)
+
+        for node_a, node_b in it.pairwise(new_nodes + [new_nodes[0]]):
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False)))
+
+        for old_node in nodes:
+            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
 
         graph.display()
         plt.show()
