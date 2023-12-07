@@ -217,6 +217,13 @@ class P2(Production):
             graph.node_for_handle(rev_mapping[i]) for i in range(0, len(rev_mapping))
         ]
 
+        # check if appropriate vertex in the middle of the edge is hanging
+        if not nodes[len(rev_mapping) - 1].attrs.hanging:
+            return False
+        for i in range(0, len(rev_mapping) - 1):
+            if nodes[i].attrs.hanging:
+                return False
+
         filtered_hanging_nodes = list(filter(lambda node: node.attrs.hanging, nodes))
         if len(filtered_hanging_nodes) != 1:
             return False
