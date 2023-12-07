@@ -124,8 +124,45 @@ class P1(Production):
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
         # Break the edges (1, 2), (2, 3), (3, 4), (4, 1), creating 4 new nodes
         # Add 5 new node to the center of the split
+        rev_mapping = self.rev_mapping
 
-        break_the_quadrangle(graph, self.rev_mapping)
+        nodes = [
+            graph.node_for_handle(rev_mapping[i]) for i in range(0, 4)
+        ]
+
+        new_nodes = []
+        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
+            x = (node_a.attrs.x + node_b.attrs.x) / 2
+            y = (node_a.attrs.y + node_b.attrs.y) / 2
+            edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
+            h = not edge_attrs.value
+            new_node = Node(NodeAttrs('v', x, y, h))
+            new_nodes.append(new_node)
+
+            graph.remove_edge(node_a.handle, node_b.handle)
+            graph.add_node(new_node)
+            graph.add_edge(Edge(u=node_a.handle, v=new_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+            graph.add_edge(Edge(u=new_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+
+        # the central node
+        x = sum(map(lambda node: node.attrs.x, nodes)) / 4
+        y = sum(map(lambda node: node.attrs.y, nodes)) / 4
+        h = False
+        new_node = Node(NodeAttrs('v', x, y, h))
+        graph.add_node(new_node)
+
+        for node in new_nodes:
+            graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
+
+        # add Q edges
+        for node_a, node_b in zip(nodes[:2], nodes[2:]):
+            graph.remove_edge(node_a.handle, node_b.handle)
+
+        for node_a, node_b in it.pairwise(new_nodes + [new_nodes[0]]):
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False)))
+
+        for old_node in nodes:
+            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
 
         graph.display()
         plt.show()
@@ -194,9 +231,5 @@ class P2(Production):
         return True
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
-        break_the_quadrangle(graph, self.rev_mapping, )
-
-        graph.node_for_handle(self.rev_mapping[4]).attrs.hanging = False
-
         graph.display()
         plt.show()
