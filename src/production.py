@@ -225,7 +225,7 @@ class P2(Production):
                 return False
 
         self.hanging_node = nodes[2]
-        external_nodes = deepcopy(nodes)
+        external_nodes = deepcopy(nodes[:-1])
         external_nodes.remove(self.hanging_node)
         self.external_nodes = external_nodes
 
