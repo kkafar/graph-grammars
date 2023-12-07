@@ -170,7 +170,7 @@ class P2(Production):
         self.lhs: Graph = self.__create_lhs()
         self.rev_mapping: Dict[NodeHandle, NodeHandle] | None = None
         self.hanging_node: Node | None = None
-        self.not_hanging_nodes: list[Node] | None = None
+        self.external_nodes: list[Node] | None = None
 
     def get_lhs(self) -> Graph:
         return self.lhs
@@ -225,7 +225,7 @@ class P2(Production):
         if not verify_central_hyperedges(graph, nodes=not_hanging_nodes):
             return False
 
-        self.not_hanging_nodes = not_hanging_nodes
+        self.external_nodes = not_hanging_nodes
 
         # Verify all the edges are of appropriate type
         if not verify_normal_edges_type(graph, nodes):
@@ -266,8 +266,8 @@ class P2(Production):
         graph.remove_node(self.hanging_node.handle)
 
         # the central node
-        x = sum(map(lambda node: node.attrs.x, self.not_hanging_nodes)) / 4
-        y = sum(map(lambda node: node.attrs.y, self.not_hanging_nodes)) / 4
+        x = sum(map(lambda node: node.attrs.x, self.external_nodes)) / 4
+        y = sum(map(lambda node: node.attrs.y, self.external_nodes)) / 4
         h = False
         new_node = Node(NodeAttrs('v', x, y, h))
         graph.add_node(new_node)
@@ -275,7 +275,23 @@ class P2(Production):
         for node in new_nodes:
             graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
 
-        # TODO: add Q edges
+        # add Q edges
+        for node_a, node_b in zip(self.external_nodes[:2], self.external_nodes[2:]):
+            graph.remove_edge(node_a.handle, node_b.handle)
+
+        for old_node in self.external_nodes:
+            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
+
+        paired_nodes: list[tuple[Node, Node]] = []
+        for i in range(len(new_nodes)):
+            for j in range(i + 1, len(new_nodes)):
+                # Check if the x or y value of the nodes are different
+                if new_nodes[i].attrs.x != new_nodes[j].attrs.x and \
+                        new_nodes[i].attrs.y != new_nodes[j].attrs.y:
+                    paired_nodes.append((new_nodes[i], new_nodes[j],))
+
+        for pair in paired_nodes:
+            graph.add_edge(Edge(pair[0].handle, pair[1].handle, EdgeAttrs('q', False)))
 
         graph.display()
         plt.show()
