@@ -65,11 +65,11 @@ def test_production():
 def test_production2():
     graph = Graph()
 
-    node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
-    node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
-    node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
-    node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
-    node_4 = Node(NodeAttrs('v', 1, 0.5, True), 4)
+    node_0 = Node(NodeAttrs('v', 0, 0, False))
+    node_1 = Node(NodeAttrs('v', 1, 0, False))
+    node_2 = Node(NodeAttrs('v', 1, 1, False))
+    node_3 = Node(NodeAttrs('v', 0, 1, False))
+    node_4 = Node(NodeAttrs('v', 1, 0.5, True))
     nodes = [node_0, node_1, node_4, node_2, node_3]
 
     graph.add_node_collection(nodes)
@@ -80,6 +80,9 @@ def test_production2():
 
     for node_1, node_2 in it.pairwise(nodes + [node_0]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+
+    # graph.display()
+    # plt.show()
 
     P2()(graph)
 

@@ -1,6 +1,5 @@
 import itertools as it
-from typing import Dict
-from model import NodeAttrs, EdgeAttrs, NodeHandle, Edge, Node
+from model import Node
 from graph import Graph
 
 
@@ -17,7 +16,6 @@ def verify_central_hyperedges(graph: 'Graph', nodes: list[Node]):
 
 def verify_normal_edges_type(graph: 'Graph', nodes: list[Node]):
     for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
-        print(node_a, node_b)
         edge = graph.edge_for_handles(node_a.handle, node_b.handle)
         if edge.attrs.kind != 'e':
             return False

@@ -1,14 +1,12 @@
 import itertools as it
 from copy import deepcopy
-
 import matplotlib.pyplot as plt
 import util
-from typing import Dict, Iterable
+from typing import Dict
 from model import NodeAttrs, EdgeAttrs, NodeHandle, Edge, Node
 from graph import Graph
 from pprint import pprint
-
-from utils import verify_central_hyperedges, verify_normal_edges_type, break_the_quadrangle
+from utils import verify_central_hyperedges, verify_normal_edges_type
 
 
 class Production:
@@ -39,7 +37,6 @@ class Production:
         self.reset()
         lhs = self.get_lhs()
         for mapping in graph.generate_subgraphs_isomorphic_with(lhs):
-            print(mapping)
             if self.is_mapping_feasible(graph, mapping):
                 self.apply_with_mapping(graph, mapping)
                 return True
@@ -172,6 +169,8 @@ class P2(Production):
     def __init__(self) -> None:
         self.lhs: Graph = self.__create_lhs()
         self.rev_mapping: Dict[NodeHandle, NodeHandle] | None = None
+        self.hanging_node: Node | None = None
+        self.not_hanging_nodes: list[Node] | None = None
 
     def get_lhs(self) -> Graph:
         return self.lhs
@@ -218,11 +217,15 @@ class P2(Production):
         if len(filtered_hanging_nodes) != 1:
             return False
 
+        self.hanging_node = filtered_hanging_nodes[0]
+
         # Check whether the hyperedge in the cell centre has appropriate value
-        nodes_for_hyperedges_verification = deepcopy(nodes)
-        nodes_for_hyperedges_verification.remove(filtered_hanging_nodes[0])
-        if not verify_central_hyperedges(graph, nodes=nodes_for_hyperedges_verification):
+        not_hanging_nodes = deepcopy(nodes)
+        not_hanging_nodes.remove(filtered_hanging_nodes[0])
+        if not verify_central_hyperedges(graph, nodes=not_hanging_nodes):
             return False
+
+        self.not_hanging_nodes = not_hanging_nodes
 
         # Verify all the edges are of appropriate type
         if not verify_normal_edges_type(graph, nodes):
@@ -231,5 +234,48 @@ class P2(Production):
         return True
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
+        rev_mapping = self.rev_mapping
+        nodes = [
+            graph.node_for_handle(rev_mapping[i]) for i in rev_mapping.keys()
+        ]
+
+        # change hanging value of hanging node
+        replaced_hanging_node = Node(NodeAttrs('v', self.hanging_node.attrs.x, self.hanging_node.attrs.y, False))
+        graph.add_node(replaced_hanging_node)
+
+        new_nodes = [replaced_hanging_node]
+        for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
+            edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
+            if node_a.attrs.hanging:
+                graph.add_edge(Edge(u=replaced_hanging_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+            elif node_b.attrs.hanging:
+                graph.add_edge(Edge(u=node_a.handle, v=replaced_hanging_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+            else:
+                x = (node_a.attrs.x + node_b.attrs.x) / 2
+                y = (node_a.attrs.y + node_b.attrs.y) / 2
+                h = not edge_attrs.value
+                new_node = Node(NodeAttrs('v', x, y, h))
+                new_nodes.append(new_node)
+
+                graph.remove_edge(node_a.handle, node_b.handle)
+                graph.add_node(new_node)
+                graph.add_edge(Edge(u=node_a.handle, v=new_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+                graph.add_edge(Edge(u=new_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+
+        # remove left hanging node
+        graph.remove_node(self.hanging_node.handle)
+
+        # the central node
+        x = sum(map(lambda node: node.attrs.x, self.not_hanging_nodes)) / 4
+        y = sum(map(lambda node: node.attrs.y, self.not_hanging_nodes)) / 4
+        h = False
+        new_node = Node(NodeAttrs('v', x, y, h))
+        graph.add_node(new_node)
+
+        for node in new_nodes:
+            graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
+
+        # TODO: add Q edges
+
         graph.display()
         plt.show()
