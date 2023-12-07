@@ -214,43 +214,37 @@ class P2(Production):
         rev_mapping = self.rev_mapping
 
         nodes = [
-            graph.node_for_handle(rev_mapping[i]) for i in range(0, len(rev_mapping))
+            graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 4, 2, 3, 0)
         ]
 
         # check if appropriate vertex in the middle of the edge is hanging
-        if not nodes[len(rev_mapping) - 1].attrs.hanging:
+        if not nodes[2].attrs.hanging:
             return False
-        for i in range(0, len(rev_mapping) - 1):
+        for i in (0, 1, 3, 4):
             if nodes[i].attrs.hanging:
                 return False
 
-        filtered_hanging_nodes = list(filter(lambda node: node.attrs.hanging, nodes))
-        if len(filtered_hanging_nodes) != 1:
-            return False
-
-        self.hanging_node = filtered_hanging_nodes[0]
+        self.hanging_node = nodes[2]
+        external_nodes = deepcopy(nodes)
+        external_nodes.remove(self.hanging_node)
+        self.external_nodes = external_nodes
 
         # Check whether the hyperedge in the cell centre has appropriate value
-        not_hanging_nodes = deepcopy(nodes)
-        not_hanging_nodes.remove(filtered_hanging_nodes[0])
-        if not verify_central_hyperedges(graph, nodes=not_hanging_nodes):
+        if not verify_central_hyperedges(graph, nodes=self.external_nodes):
             return False
 
-        self.external_nodes = not_hanging_nodes
-
         # Verify all the edges are of appropriate type
-        for node_a, node_b in it.combinations(nodes, 2):
-            if graph.nx_graph.has_edge(node_a.handle, node_b.handle):
-                edge = graph.edge_for_handles(node_a.handle, node_b.handle)
-                if edge.attrs.kind != 'q' and edge.attrs.kind != 'e':
-                    return False
+        for node_a, node_b in it.pairwise(nodes):
+            edge = graph.edge_for_handles(node_a.handle, node_b.handle)
+            if edge.attrs.kind != 'e':
+                return False
 
         return True
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
         rev_mapping = self.rev_mapping
         nodes = [
-            graph.node_for_handle(rev_mapping[i]) for i in range(0, len(rev_mapping))
+            graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 4, 2, 3, 0)
         ]
 
         # change hanging value of hanging node
@@ -258,25 +252,23 @@ class P2(Production):
         graph.add_node(replaced_hanging_node)
 
         new_nodes = [replaced_hanging_node]
-        for node_a, node_b in it.combinations(nodes, 2):
-            if graph.nx_graph.has_edge(node_a.handle, node_b.handle):
-                edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
-                if edge_attrs.kind != 'q':
-                    if node_a.attrs.hanging:
-                        graph.add_edge(Edge(u=replaced_hanging_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
-                    elif node_b.attrs.hanging:
-                        graph.add_edge(Edge(u=node_a.handle, v=replaced_hanging_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
-                    else:
-                        x = (node_a.attrs.x + node_b.attrs.x) / 2
-                        y = (node_a.attrs.y + node_b.attrs.y) / 2
-                        h = not edge_attrs.value
-                        new_node = Node(NodeAttrs('v', x, y, h))
-                        new_nodes.append(new_node)
+        for node_a, node_b in it.pairwise(nodes):
+            edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
+            if node_a.attrs.hanging:
+                graph.add_edge(Edge(u=replaced_hanging_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+            elif node_b.attrs.hanging:
+                graph.add_edge(Edge(u=node_a.handle, v=replaced_hanging_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+            else:
+                x = (node_a.attrs.x + node_b.attrs.x) / 2
+                y = (node_a.attrs.y + node_b.attrs.y) / 2
+                h = not edge_attrs.value
+                new_node = Node(NodeAttrs('v', x, y, h))
+                new_nodes.append(new_node)
 
-                        graph.remove_edge(node_a.handle, node_b.handle)
-                        graph.add_node(new_node)
-                        graph.add_edge(Edge(u=node_a.handle, v=new_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
-                        graph.add_edge(Edge(u=new_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+                graph.remove_edge(node_a.handle, node_b.handle)
+                graph.add_node(new_node)
+                graph.add_edge(Edge(u=node_a.handle, v=new_node.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
+                graph.add_edge(Edge(u=new_node.handle, v=node_b.handle, attrs=EdgeAttrs('e', edge_attrs.value)))
 
         # remove left hanging node
         graph.remove_node(self.hanging_node.handle)
@@ -291,7 +283,7 @@ class P2(Production):
         for node in new_nodes:
             graph.add_edge(Edge(node.handle, new_node.handle, EdgeAttrs('e', False)))
 
-        # add Q edges
+        # # add Q edges
         for node_a, node_b in zip(self.external_nodes[:2], self.external_nodes[2:]):
             graph.remove_edge(node_a.handle, node_b.handle)
 
