@@ -93,6 +93,6 @@ def test_production2():
 
 if __name__ == '__main__':
     plt.rcParams['figure.figsize'] = (16, 9)
-    test_production()
-    # test_production2()
+    # test_production()
+    test_production2()
     # main()

@@ -295,19 +295,15 @@ class P2(Production):
         for node_a, node_b in zip(self.external_nodes[:2], self.external_nodes[2:]):
             graph.remove_edge(node_a.handle, node_b.handle)
 
+        q_edge_handles = []
         for old_node in self.external_nodes:
-            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
+            edge = Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False))
+            graph.add_edge(edge)
+            q_edge_handles.append(edge.attrs.handle)
 
-        paired_nodes: list[tuple[Node, Node]] = []
-        for i in range(len(new_nodes)):
-            for j in range(i + 1, len(new_nodes)):
-                # Check if the x or y value of the nodes are different
-                if new_nodes[i].attrs.x != new_nodes[j].attrs.x and \
-                        new_nodes[i].attrs.y != new_nodes[j].attrs.y:
-                    paired_nodes.append((new_nodes[i], new_nodes[j],))
-
-        for pair in paired_nodes:
-            graph.add_edge(Edge(pair[0].handle, pair[1].handle, EdgeAttrs('q', False)))
+        new_nodes[0], new_nodes[1] = new_nodes[1], new_nodes[0]
+        for (node_a, node_b), handle in zip(it.pairwise([new_nodes[-1]] + new_nodes), q_edge_handles):
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False, handle)))
 
         graph.display()
         plt.show()
