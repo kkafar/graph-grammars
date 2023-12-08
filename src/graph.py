@@ -28,7 +28,7 @@ class Graph:
             self.remove_node(node)
 
     def add_edge(self, edge: Edge):
-        self._graph.add_edge(u_of_edge=edge[0], v_of_edge=edge[1], payload=edge[2])
+        self._graph.add_edge(u_of_edge=edge.u, v_of_edge=edge.v, payload=edge.attrs)
 
     def add_edge_collection(self, edge_collection: Iterable[Edge]):
         for edge in edge_collection:

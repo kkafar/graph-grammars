@@ -52,13 +52,15 @@ def test_production():
 
     graph.add_node_collection(nodes)
 
-    graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
-    graph.add_edge(Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True)))
+    # Add two edges of type Q, note that they have the same handle!!!
+    q_edge = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True))
+    q_edge_2 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
+    graph.add_edge(q_edge)
+    graph.add_edge(q_edge_2)
 
     for node_1, node_2 in it.pairwise(nodes + [node_1]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
 
-    P1()(graph)
     P1()(graph)
     # p1_instance = P1()
 
@@ -74,9 +76,11 @@ def test_production2():
 
     graph.add_node_collection(nodes)
 
-    # Add two edges of type Q
-    graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
-    graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+    # Add two edges of type Q, note that they have the same handle!!!
+    q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
+    q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
+    graph.add_edge(q_edge)
+    graph.add_edge(q_edge_2)
 
     for node_1, node_2 in it.pairwise(nodes + [node_0]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
@@ -89,5 +93,6 @@ def test_production2():
 
 if __name__ == '__main__':
     plt.rcParams['figure.figsize'] = (16, 9)
+    # test_production()
     test_production2()
     # main()

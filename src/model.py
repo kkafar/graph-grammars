@@ -2,6 +2,9 @@ import itertools as it
 from typing import NamedTuple, Literal, Optional, Dict
 from dataclasses import dataclass, field
 
+NodeHandle = int
+EdgeHandle = int
+
 class NodeAttrs(NamedTuple):
     label: str
     x: float
@@ -11,21 +14,23 @@ class NodeAttrs(NamedTuple):
     def __str__(self, i: int = None) -> str:
         return f'{i}\nl={self.label}, h={self.hanging}\nx={self.x}, y={self.y}'
 
-class EdgeAttrs(NamedTuple):
+@dataclass
+class EdgeAttrs:
     kind: Literal['e'] | Literal['q']
     value: bool  # Interpretation of this field depends on edge kind. See presentation with project spec.
+    handle: EdgeHandle = field(default_factory=it.count().__next__, init=True)
 
     def __str__(self) -> str:
-        return f'kind={self.kind}, r/b={self.value}'
+        return f'{self.kind}, {self.value}, {self.handle}'
 
-NodeHandle = int
 
 @dataclass
 class Node:
     attrs: NodeAttrs
     handle: NodeHandle = field(default_factory=it.count().__next__, init=True)
 
-class Edge(NamedTuple):
+@dataclass
+class Edge:
     u: NodeHandle
     v: NodeHandle
     attrs: EdgeAttrs
