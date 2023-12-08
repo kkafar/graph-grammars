@@ -1,7 +1,6 @@
 import itertools as it
 from typing import NamedTuple, Literal, Optional, Dict
 from dataclasses import dataclass, field
-from collections import namedtuple
 
 NodeHandle = int
 EdgeHandle = int
