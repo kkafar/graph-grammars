@@ -82,9 +82,11 @@ class P1(Production):
 
         nodes.append(node_0)
 
-        # Add two edges of type Q
-        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
-        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+        # Add two edges of type Q, note that they have the same handle!!!
+        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
+        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
+        graph.add_edge(q_edge)
+        graph.add_edge(q_edge_2)
 
         for node_0, node_1 in it.pairwise(nodes):
             graph.add_edge(Edge(node_0.handle, node_1.handle, EdgeAttrs(kind='e', value=False)))
@@ -159,11 +161,15 @@ class P1(Production):
         for node_a, node_b in zip(nodes[:2], nodes[2:]):
             graph.remove_edge(node_a.handle, node_b.handle)
 
-        for node_a, node_b in it.pairwise(new_nodes + [new_nodes[0]]):
-            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False)))
+        q_edge_handles = []
+        for node_a, node_b in it.pairwise([new_nodes[-1]] + new_nodes):
+            edge = Edge(node_a.handle, node_b.handle, EdgeAttrs('q', False))
+            graph.add_edge(edge)
+            q_edge_handles.append(edge.attrs.handle)
 
-        for old_node in nodes:
-            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False)))
+
+        for old_node, edge_handle in zip(nodes, q_edge_handles):
+            graph.add_edge(Edge(new_node.handle, old_node.handle, EdgeAttrs('q', False, edge_handle)))
 
         graph.display()
         plt.show()
@@ -194,9 +200,11 @@ class P2(Production):
 
         graph.add_node_collection(nodes)
 
-        # Add two edges of type Q
-        graph.add_edge(Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True)))
-        graph.add_edge(Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True)))
+        # Add two edges of type Q, note that they have the same handle!!!
+        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
+        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
+        graph.add_edge(q_edge)
+        graph.add_edge(q_edge_2)
 
         for node_1, node_2 in it.pairwise(nodes + [node_0]):
             graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
