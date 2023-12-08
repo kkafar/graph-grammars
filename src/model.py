@@ -3,8 +3,6 @@ from typing import NamedTuple, Literal, Optional, Dict
 from dataclasses import dataclass, field
 from collections import namedtuple
 
-MyType = namedtuple('MyType', ('a', 'b'))
-
 NodeHandle = int
 EdgeHandle = int
 

@@ -85,8 +85,8 @@ def test_production2():
     for node_1, node_2 in it.pairwise(nodes + [node_0]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
 
-    graph.display()
-    plt.show()
+    # graph.display()
+    # plt.show()
 
     P2()(graph)
 
