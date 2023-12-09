@@ -16,7 +16,7 @@ class NodeAttrs(NamedTuple):
     label: str
     x: float
     y: float
-    hanging: bool
+    hanging: bool # if interior node (p or q), then this prop marks whether we want to break this segment
 
     def __str__(self, i: int = None) -> str:
         return f'{i}\nl={self.label}, h={self.hanging}\nx={self.x}, y={self.y}'
@@ -24,7 +24,7 @@ class NodeAttrs(NamedTuple):
 
 @dataclass
 class EdgeAttrs:
-    kind: Literal['e'] | Literal['q']
+    kind: Literal['e'] | Literal['q'] | Literal['p']
     value: bool  # Interpretation of this field depends on edge kind. See presentation with project spec.
     handle: EdgeHandle = field(default_factory=it.count().__next__, init=True)
 
