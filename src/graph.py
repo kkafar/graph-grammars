@@ -44,7 +44,7 @@ class Graph:
 
     def generate_subgraphs_isomorphic_with(self, other: 'Graph') -> Iterable[GraphMapping]:
         gm = nx.isomorphism.GraphMatcher(self._graph, other.nx_graph)
-        return gm.subgraph_isomorphisms_iter()
+        return gm.subgraph_monomorphisms_iter()
 
     def node_for_handle(self, handle: NodeHandle) -> Node:
         return Node(handle=handle, attrs=self[handle])
