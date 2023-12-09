@@ -2,8 +2,15 @@ import itertools as it
 from typing import NamedTuple, Literal, Optional, Dict
 from dataclasses import dataclass, field
 
+
 NodeHandle = int
 EdgeHandle = int
+
+
+class EdgeEndpoints(NamedTuple):
+    u: NodeHandle
+    v: NodeHandle
+
 
 class NodeAttrs(NamedTuple):
     label: str
@@ -13,6 +20,7 @@ class NodeAttrs(NamedTuple):
 
     def __str__(self, i: int = None) -> str:
         return f'{i}\nl={self.label}, h={self.hanging}\nx={self.x}, y={self.y}'
+
 
 @dataclass
 class EdgeAttrs:
@@ -29,11 +37,16 @@ class Node:
     attrs: NodeAttrs
     handle: NodeHandle = field(default_factory=it.count().__next__, init=True)
 
+
 @dataclass
 class Edge:
     u: NodeHandle
     v: NodeHandle
     attrs: EdgeAttrs
 
+    def get_endpoints(self) -> EdgeEndpoints:
+        return EdgeEndpoints(u, v)
+
 
 GraphMapping = Dict[NodeHandle, NodeHandle]
+

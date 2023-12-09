@@ -2,7 +2,8 @@ import networkx as nx
 from model import (
     Node, NodeHandle,
     NodeAttrs, Edge,
-    EdgeAttrs, GraphMapping
+    EdgeAttrs, GraphMapping,
+    EdgeEndpoints
 )
 from typing import Optional, Iterable, Any
 
@@ -59,7 +60,7 @@ class Graph:
     def node_attrs(self, node: NodeHandle) -> NodeAttrs:
         return self[node]
 
-    def edge_attrs(self, edge: Edge) -> EdgeAttrs:
+    def edge_attrs(self, edge: EdgeEndpoints) -> EdgeAttrs:
         return self._graph[edge[0]][edge[1]]['payload']
 
     def edge_for_handles(self, handle_1: NodeHandle, handle_2: NodeHandle) -> Edge:
