@@ -92,37 +92,6 @@ class P1(Production):
 
         return graph
 
-
-    # def is_mapping_feasible(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]) -> bool:
-    #     # Now we have mapping of lhs nodes to `graph` nodes.
-    #     # Aliasing for convenience
-    #     rev_mapping = self._rev_mapping
-    #
-    #     v_nodes = [
-    #         graph.node_for_handle(rev_mapping[i]) for i in range(0, len(rev_mapping) - 1)
-    #     ]
-    #     q_node = graph.node_for_handle(rev_mapping[len(rev_mapping) - 1])
-    #
-    #     if any(map(lambda node: node.attrs.flag, v_nodes)):
-    #         print('Rejecting because of bad hanging node value')
-    #         return False
-    #
-    #     # We still need to check whether the hyperedge in the cell centre has appropriate value,
-    #     if q_node.attrs.label != 'q' or q_node.attrs.flag == False:
-    #         print('Rejecting because of q', q_node)
-    #         print(rev_mapping)
-    #         return False
-    #
-    #     # Also we need to verify all the edges are of appropriate type
-    #     for node_a, node_b in it.pairwise(v_nodes + [v_nodes[0]]):
-    #         edge = graph.edge_for_handles(node_a.handle, node_b.handle)
-    #         if edge.attrs.kind != 'e':
-    #             print('Rejecting because e edge')
-    #             return False
-    #
-    #     return True
-
-
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
         # Break the edges (1, 2), (2, 3), (3, 4), (4, 1), creating 4 new nodes
         # Add 5 new node to the center of the split
@@ -196,40 +165,6 @@ class P2(Production):
         # plt.show()
 
         return graph
-
-    # def is_mapping_feasible(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]) -> bool:
-    #     # Now we have mapping of lhs nodes to `graph` nodes.
-    #
-    #     # Aliasing for convenience
-    #     rev_mapping = self._rev_mapping
-    #
-    #     nodes = [
-    #         graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 4, 2, 3, 0)
-    #     ]
-    #
-    #     # check if appropriate vertex in the middle of the edge is hanging
-    #     if not nodes[2].attrs.flag:
-    #         return False
-    #     for i in (0, 1, 3, 4):
-    #         if nodes[i].attrs.flag:
-    #             return False
-    #
-    #     self.hanging_node = nodes[2]
-    #     external_nodes = deepcopy(nodes[:-1])
-    #     external_nodes.remove(self.hanging_node)
-    #     self.external_nodes = external_nodes
-    #
-    #     # Check whether the hyperedge in the cell centre has appropriate value
-    #     if not verify_central_hyperedges(graph, nodes=self.external_nodes):
-    #         return False
-    #
-    #     # Verify all the edges are of appropriate type
-    #     for node_a, node_b in it.pairwise(nodes):
-    #         edge = graph.edge_for_handles(node_a.handle, node_b.handle)
-    #         if edge.attrs.kind != 'e':
-    #             return False
-    #
-    #     return True
 
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
         rev_mapping = self._rev_mapping
