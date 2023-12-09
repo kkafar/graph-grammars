@@ -1,7 +1,6 @@
-from typing import Dict
+from typing import Dict, Iterable
 import itertools as it
 from model import Node
-from graph import Graph
 
 
 def reverse_dict_mapping(dictionary: Dict[int, int]) -> Dict[int, int]:
@@ -21,4 +20,18 @@ def verify_central_hyperedges(graph: 'Graph', nodes: list[Node]):
         return False
 
     return True
+
+# TODO: Type this properly
+def iter_batched(iterable: Iterable, n: int):
+    assert n >= 1
+    iterator = iter(iterable)
+    while batch := tuple(it.islice(iterator, n)):
+        yield batch
+
+
+def avg_point_from_nodes(nodes: Iterable[Node]) -> tuple[float, float]:
+    count = len(nodes)
+    x = sum(map(lambda node: node.attrs.x, nodes)) / count
+    y = sum(map(lambda node: node.attrs.y, nodes)) / count
+    return (x, y)
 

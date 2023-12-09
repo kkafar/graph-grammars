@@ -1,3 +1,4 @@
+import itertools as it
 import networkx as nx
 from model import (
     Node, NodeHandle,
@@ -5,21 +6,49 @@ from model import (
     EdgeAttrs, GraphMapping,
     EdgeEndpoints
 )
-from typing import Optional, Iterable, Any
+from typing import Optional, Iterable, Any, Callable
+import util
+
+
+def node_equality(nx_node_attrs_1, nx_node_attrs_2) -> bool:
+    attrs_1: NodeAttrs = nx_node_attrs_1['payload']
+    attrs_2: NodeAttrs = nx_node_attrs_2['payload']
+
+    return (
+        attrs_1.label == attrs_2.label and
+        attrs_1.flag == attrs_2.flag
+    )
+
+
+def edge_equality(nx_edge_attrs_1, nx_edge_attrs_2) -> bool:
+    attrs_1: EdgeAttrs = nx_edge_attrs_1['payload']
+    attrs_2: EdgeAttrs = nx_edge_attrs_2['payload']
+
+    return (
+        attrs_1.kind == attrs_2.kind and
+        attrs_2.flag == attrs_2.flag
+    )
+
 
 class Graph:
     def __init__(self) -> None:
         self._graph = nx.Graph()
+        self._node_handle_factory = it.count().__next__
 
     def __contains__(self, node: NodeHandle) -> bool:
         return self._graph.has_node(node)
 
-    def add_node(self, node: Node):
+    def add_node(self, node: Node) -> NodeHandle:
+        """ IMPORTANT:
+        If the node.handle == None the we generate graph-wide-unique handle here
+        """
+        if node.handle is None:
+            node.handle = self._node_handle_factory()
         self._graph.add_node(node.handle, payload=node.attrs)
+        return node.handle
 
-    def add_node_collection(self, node_collection: Iterable[Node]):
-        for node in node_collection:
-            self.add_node(node)
+    def add_node_collection(self, node_collection: Iterable[Node]) -> Iterable[NodeHandle]:
+        return [self.add_node(node) for node in node_collection]
 
     def remove_node(self, handle: NodeHandle):
         self._graph.remove_node(handle)
@@ -43,7 +72,7 @@ class Graph:
             self.remove_edge(edge.u, edge.v)
 
     def generate_subgraphs_isomorphic_with(self, other: 'Graph') -> Iterable[GraphMapping]:
-        gm = nx.isomorphism.GraphMatcher(self._graph, other.nx_graph)
+        gm = nx.isomorphism.GraphMatcher(self._graph, other.nx_graph, node_match=node_equality, edge_match=edge_equality)
         return gm.subgraph_isomorphisms_iter()
 
     def node_for_handle(self, handle: NodeHandle) -> Node:
@@ -54,7 +83,7 @@ class Graph:
         try:
             return self._graph.nodes[node]['payload']
         except KeyError as err:
-            print(f"KEYERROR for {node}", self._graph.nodes)
+            print(f"Attempt to get node with handle {node} that does not exist in graph")
             raise err
 
     def node_attrs(self, node: NodeHandle) -> NodeAttrs:
@@ -83,21 +112,27 @@ class Graph:
         nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
 
 
-    def add_q_hyperedge(self, endpoints: tuple[EdgeEndpoints, EdgeEndpoints], attrs: EdgeAttrs):
-        """
-        :param endpoints: tuple of two EdgeEndpoints; crosswise edge pairs the Q hyper edge should connect
-        :param attrs: attributes that will be shared by all "classical edges" comprising the hyper edge
+    def add_q_hyperedge(self, nodes: tuple[Node, Node, Node, Node], edge_attrs: EdgeAttrs, q_node_handle: NodeHandle = None):
+        assert len(nodes) == 4
+        x, y = util.avg_point_from_nodes(nodes)
+        node_attrs = NodeAttrs('q', x, y, edge_attrs.flag)
+        q_node = Node(node_attrs) if q_node_handle is None else Node(node_attrs, q_node_handle)
+        self.add_node(q_node)
+        self.add_edge_collection(Edge(node.handle, q_node.handle, edge_attrs) for node in nodes)
 
-        Please note that this method does not remove any lingering nodes / edges. It only adds two new edges between given endpoints
-        and ensures that all edges have common handle in their attributes.
+    def remove_q_hyperedge(self, q_node_handle: NodeHandle):
+        """ Remove Q hyperedge with given (hyper)node in the centre.
+        This method removes also all Q-edges.
         """
-        assert len(endpoints) == 2, f"Q hyperedge specification expects tuple of two pairs, got: {endpoints}"
-        ep_1, ep_2 = endpoints
-        edge_1 = Edge(*ep_1, attrs)
-        edge_2 = Edge(*ep_2, attrs)
-        self.add_edge(edge_1)
-        self.add_edge(edge_2)
+        q_node_attrs = self.node_attrs(q_node_handle)
+        assert q_node_attrs.label == 'q', f"Attempt to remove q hyperedge with handle for node with attrs {q_node_attrs}, label={q_node_attrs.label}"
+        self.remove_node(q_node_handle)
+
 
     @property
     def nx_graph(self) -> nx.Graph:
         return self._graph
+
+    @property
+    def node_handle_factory(self) -> Callable[[], int]:
+        return self._node_handle_factory
