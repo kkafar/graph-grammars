@@ -43,7 +43,6 @@ def main():
 
 def test_production():
     graph = Graph()
-    nhf = graph.node_handle_factory
 
     node_1 = Node(NodeAttrs('v', 0, 0, False))
     node_2 = Node(NodeAttrs('v', 1, 0, False))
