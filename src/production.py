@@ -87,9 +87,8 @@ class P1(Production):
         for node_a, node_b in it.pairwise(nodes):
             graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
 
-
-        graph.display()
-        plt.show()
+        # graph.display()
+        # plt.show()
 
         return graph
 
@@ -162,8 +161,8 @@ class P1(Production):
         for corner_node, new_nodes in zip(v_nodes, it.pairwise([new_border_nodes[-1]] + new_border_nodes)):
             graph.add_q_hyperedge((corner_node, *new_nodes, central_node), EdgeAttrs('q', False))
 
-        graph.display()
-        plt.show()
+        # graph.display()
+        # plt.show()
 
 
 class P2(Production):
@@ -279,5 +278,5 @@ class P2(Production):
         for corner_node, new_nodes in zip(corner_nodes, it.pairwise([new_border_nodes[-1]] + new_border_nodes)):
             graph.add_q_hyperedge((corner_node, *new_nodes, central_node), EdgeAttrs('q', False))
 
-        graph.display()
-        plt.show()
+        # graph.display()
+        # plt.show()

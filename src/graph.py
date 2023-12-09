@@ -114,6 +114,7 @@ class Graph:
 
     def add_q_hyperedge(self, nodes: tuple[Node, Node, Node, Node], edge_attrs: EdgeAttrs, q_node_handle: NodeHandle = None):
         assert len(nodes) == 4
+        assert edge_attrs.kind == 'q'
         x, y = util.avg_point_from_nodes(nodes)
         node_attrs = NodeAttrs('q', x, y, edge_attrs.flag)
         q_node = Node(node_attrs) if q_node_handle is None else Node(node_attrs, q_node_handle)
