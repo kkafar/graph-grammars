@@ -67,6 +67,27 @@ class Graph:
         attrs = self.edge_attrs((handle_1, handle_2))
         return Edge(handle_1, handle_2, attrs)
 
+    def add_hanging_node(self, u: NodeHandle, v: NodeHandle, handle=None):
+        attr_u = self.node_attrs(u)
+        attr_v = self.node_attrs(v)
+        edge_attr = self.edge_attrs((u, v))
+        is_boundry = edge_attr.value
+        x = (attr_u.x + attr_v.x) / 2
+        y = (attr_u.y + attr_v.y) / 2
+        if handle:
+            hanging_node = Node(NodeAttrs('v', x, y, hanging=True), handle)
+        else:
+            hanging_node = Node(NodeAttrs('v', x, y, hanging=True))
+
+        self.add_node(hanging_node)
+        self.remove_edge(u, v)
+        attr = EdgeAttrs('e', is_boundry)
+        edge = Edge(u, hanging_node.handle, attr)
+        self.add_edge(edge)
+
+        attr = EdgeAttrs('e', is_boundry)
+        edge = Edge(v, hanging_node.handle, attr)
+        self.add_edge(edge)
 
     def display(self, **kwargs):
         positions = {
