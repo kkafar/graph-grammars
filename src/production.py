@@ -83,13 +83,11 @@ class P1(Production):
         nodes.append(node_0)
 
         # Add two edges of type Q, note that they have the same handle!!!
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
 
-        for node_0, node_1 in it.pairwise(nodes):
-            graph.add_edge(Edge(node_0.handle, node_1.handle, EdgeAttrs(kind='e', value=False)))
+        graph.add_q_hyperedge(((node_0.handle, node_2.handle), (node_1.handle, node_3.handle)), EdgeAttrs('q', True))
+
+        for node_a, node_b in it.pairwise(nodes):
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', value=False)))
 
         # graph.display()
         # plt.show()

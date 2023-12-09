@@ -82,6 +82,22 @@ class Graph:
         nx.draw_networkx(self.nx_graph, pos=positions, labels=node_labels, **kwargs)
         nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
 
+
+    def add_q_hyperedge(self, endpoints: tuple[EdgeEndpoints, EdgeEndpoints], attrs: EdgeAttrs):
+        """
+        :param endpoints: tuple of two EdgeEndpoints; crosswise edge pairs the Q hyper edge should connect
+        :param attrs: attributes that will be shared by all "classical edges" comprising the hyper edge
+
+        Please note that this method does not remove any lingering nodes / edges. It only adds two new edges between given endpoints
+        and ensures that all edges have common handle in their attributes.
+        """
+        assert len(endpoints) == 2, f"Q hyperedge specification expects tuple of two pairs, got: {endpoints}"
+        ep_1, ep_2 = endpoints
+        edge_1 = Edge(*ep_1, attrs)
+        edge_2 = Edge(*ep_2, attrs)
+        self.add_edge(edge_1)
+        self.add_edge(edge_2)
+
     @property
     def nx_graph(self) -> nx.Graph:
         return self._graph
