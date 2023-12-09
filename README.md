@@ -40,3 +40,10 @@ pip install -r requirements.txt
 
 ## Docs about P1, P2
 https://docs.google.com/document/d/1aBiGuepeNUuPSGl8aK_Ilit3hJedHvKwng_xBeh43OY/edit
+
+## Running
+
+```bash
+In order to run and see hardcoded tests please run:
+cd src; make test
+```
