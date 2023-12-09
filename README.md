@@ -40,3 +40,15 @@ pip install -r requirements.txt
 
 ## Docs about P1, P2
 https://docs.google.com/document/d/1aBiGuepeNUuPSGl8aK_Ilit3hJedHvKwng_xBeh43OY/edit
+
+
+## Adding new productions
+
+1. Each production should live in separate module: `src/production/production_<production_number>.py`
+2. After implementing the production please reexport it in [main module file](./src/production/__init__.py), so it can be imported straight from it.
+3. Tests live inside `src/__test__/` directory.
+4. Each production should have its own dedicated test module `src/__test__/test_production_<production_number>.py`
+
+
+In case of any changes to this structure please remember to edit readme & put these changes in compact, **dedicated** PR.
+
