@@ -36,4 +36,9 @@ class Edge:
     attrs: EdgeAttrs
 
 
+class EdgeEndpoints(NamedTuple):
+    u: NodeHandle
+    v: NodeHandle
+
+
 GraphMapping = Dict[NodeHandle, NodeHandle]
