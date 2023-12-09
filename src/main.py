@@ -18,7 +18,7 @@ def main():
     graph.add_node_collection(nodes)
 
     for node_1, node_2 in it.pairwise(nodes + [node_1]):
-        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
     print(graph.nx_graph.nodes)
     print(graph.nx_graph.edges)
@@ -53,16 +53,16 @@ def test_production():
     graph.add_node_collection(nodes)
 
     # Add two edges of type Q, note that they have the same handle!!!
-    q_edge = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True))
-    q_edge_2 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-    graph.add_edge(q_edge)
-    graph.add_edge(q_edge_2)
+    graph.add_q_hyperedge(nodes, EdgeAttrs('q', True))
 
     for node_1, node_2 in it.pairwise(nodes + [node_1]):
-        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
-    P1()(graph)
-    # p1_instance = P1()
+    graph.display()
+    plt.show()
+
+    assert P1()(graph)
+
 
 def test_production2():
     graph = Graph()
@@ -77,18 +77,15 @@ def test_production2():
     graph.add_node_collection(nodes)
 
     # Add two edges of type Q, note that they have the same handle!!!
-    q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-    q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-    graph.add_edge(q_edge)
-    graph.add_edge(q_edge_2)
+    graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', True))
 
     for node_1, node_2 in it.pairwise(nodes + [node_0]):
-        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
-    # graph.display()
-    # plt.show()
+    graph.display()
+    plt.show()
 
-    P2()(graph)
+    assert P2()(graph)
 
 
 if __name__ == '__main__':

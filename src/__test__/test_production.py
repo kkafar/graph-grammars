@@ -19,13 +19,10 @@ class TestProduction1(unittest.TestCase):
 
         graph.add_node_collection(nodes)
 
-        q_edge = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge(nodes, EdgeAttrs('q', True))
 
         for node_a, node_b in it.pairwise(nodes + [node_1]):
-            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
 
         p1 = P1()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
@@ -43,19 +40,12 @@ class TestProduction1(unittest.TestCase):
         nodes = [node_1, node_2, node_3, node_4, node_5, node_6]
 
         graph.add_node_collection(nodes)
+        graph.add_q_hyperedge((node_1, node_2, node_5, node_6), EdgeAttrs('q', True))
+        graph.add_q_hyperedge((node_2, node_4, node_3, node_5), EdgeAttrs('q', True))
 
-        q_edge = Edge(node_1.handle, node_5.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_2.handle, node_6.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
-        q_edge_3 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_4 = Edge(node_3.handle, node_5.handle, EdgeAttrs(kind='q', value=True, handle=q_edge_3.attrs.handle))
-        graph.add_edge(q_edge_3)
-        graph.add_edge(q_edge_4)
-
-        graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', value=False)))
+        graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
         for node_1, node_2 in it.pairwise(nodes + [node_1]):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p1 = P1()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
@@ -72,13 +62,10 @@ class TestProduction1(unittest.TestCase):
 
         graph.add_node_collection(nodes)
 
-        q_edge = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=False))
-        q_edge_2 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_1, node_2, node_3, node_4), EdgeAttrs('q', False))
 
         for node_a, node_b in it.pairwise(nodes + [node_1]):
-            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
 
         p1 = P1()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
@@ -94,15 +81,11 @@ class TestProduction1(unittest.TestCase):
         nodes = [node_1, node_2, node_3, node_4]
 
         graph.add_node_collection(nodes)
+        graph.add_q_hyperedge((node_1, node_2, node_3, node_4), EdgeAttrs('q', True))
 
-        q_edge = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
-
-        graph.add_edge(Edge(node_4.handle, node_1.handle, EdgeAttrs(kind='q', value=True)))
+        graph.add_edge(Edge(node_4.handle, node_1.handle, EdgeAttrs(kind='q', flag=True)))
         for node_a, node_b in it.pairwise(nodes):
-            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
 
         p1 = P1()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
@@ -118,14 +101,10 @@ class TestProduction1(unittest.TestCase):
         nodes = [node_1, node_2, node_3, node_4]
 
         graph.add_node_collection(nodes)
-
-        q_edge = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_1, node_2, node_3, node_4), EdgeAttrs('q', True))
 
         for node_a, node_b in it.pairwise(nodes + [nodes[0]]):
-            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
 
         p1 = P1()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p1.get_lhs())
@@ -144,15 +123,10 @@ class TestProduction2(unittest.TestCase):
         nodes = [node_0, node_1, node_4, node_2, node_3]
 
         graph.add_node_collection(nodes)
-
-        # Add two edges of type Q
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', True))
 
         for node_1, node_2 in it.pairwise(nodes + [node_0]):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
@@ -169,15 +143,10 @@ class TestProduction2(unittest.TestCase):
         nodes = [node_0, node_1, node_2, node_3, node_4]
 
         graph.add_node_collection(nodes)
-
-        # Add two edges of type Q
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', True))
 
         for node_1, node_2 in it.pairwise(nodes + [node_0]):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
@@ -197,18 +166,12 @@ class TestProduction2(unittest.TestCase):
 
         graph.add_node_collection(nodes)
 
-        q_edge = Edge(node_1.handle, node_5.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_2.handle, node_6.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
-        q_edge_3 = Edge(node_2.handle, node_4.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_4 = Edge(node_3.handle, node_5.handle, EdgeAttrs(kind='q', value=True, handle=q_edge_3.attrs.handle))
-        graph.add_edge(q_edge_3)
-        graph.add_edge(q_edge_4)
+        graph.add_q_hyperedge((node_1, node_5, node_2, node_6), EdgeAttrs('q', True))
+        graph.add_q_hyperedge((node_2, node_4, node_3, node_5), EdgeAttrs('q', True))
 
-        graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', value=False)))
+        graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
         for node_1, node_2 in it.pairwise(nodes + [node_1]):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
@@ -225,15 +188,10 @@ class TestProduction2(unittest.TestCase):
         nodes = [node_0, node_1, node_4, node_2, node_3]
 
         graph.add_node_collection(nodes)
-
-        # Add two edges of type Q
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=False))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', False))
 
         for node_1, node_2 in it.pairwise(nodes + [node_0]):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
@@ -250,15 +208,10 @@ class TestProduction2(unittest.TestCase):
         nodes = [node_0, node_1, node_4, node_2, node_3]
 
         graph.add_node_collection(nodes)
-
-        # Add two edges of type Q
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', True))
 
         for node_1, node_2 in it.pairwise(nodes + [node_0]):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='q', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='q', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
@@ -275,15 +228,10 @@ class TestProduction2(unittest.TestCase):
         nodes = [node_0, node_1, node_4, node_2, node_3]
 
         graph.add_node_collection(nodes)
-
-        # Add two edges of type Q
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
+        graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', True))
 
         for node_1, node_2 in it.pairwise(nodes):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
@@ -300,15 +248,11 @@ class TestProduction2(unittest.TestCase):
         nodes = [node_0, node_1, node_4, node_2, node_3]
 
         graph.add_node_collection(nodes)
+        graph.add_q_hyperedge((node_0, node_1, node_2, node_3), EdgeAttrs('q', True))
 
         # Add two edges of type Q
-        q_edge = Edge(node_0.handle, node_2.handle, EdgeAttrs(kind='q', value=True))
-        q_edge_2 = Edge(node_1.handle, node_3.handle, EdgeAttrs(kind='q', value=True, handle=q_edge.attrs.handle))
-        graph.add_edge(q_edge)
-        graph.add_edge(q_edge_2)
-
         for node_1, node_2 in it.pairwise(nodes):
-            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', value=False)))
+            graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
         p2 = P2()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p2.get_lhs())
