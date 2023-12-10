@@ -139,7 +139,7 @@ class Graph:
 
         :param nodes: tuple/list of FIVE nodes, that the P-hyperedge should connect; ORDER OF THE NODES MATTERS FOR THE LAYOUT, see below
         :param edge_attrs: shared attributes for all the edges that the hyperedge is comprised of
-        :param p_node_handle: optional node handle for the P-hypernode; if not specified an graph-unique id will be assiged automaticaly
+        :param p_node_handle: optional node handle for the P-hypernode; if not specified an graph-unique id will be assigned automatically
         :param p_node_coords: optional tuple with coordinates for the P-hypernode; if not specified the position will be calculated as mean point between: nodes[0], nodes[1], nodes[3], nodes[4]
         """
 
@@ -161,13 +161,22 @@ class Graph:
         self.remove_node(p_node_handle)
 
 
-    def split_edge_with_hanging_node(self, edge: EdgeEndpoints, hanging_node_handle: NodeHandle = None):
+    def split_edge_with_vnode(self, edge: EdgeEndpoints, node_flag: bool = None, node_handle: NodeHandle = None):
+        """ Splits given edge with new 'v' node.
+
+        :param edge: endpoints of the to-be-splitted edge
+        :param node_flag: optional flag for the new node; if not specified it will default to negated flag value of the edge that is being split
+                          as it is required in most of the productions
+        :param node_handle: optional handle for the new node; if not specified an graph-unique id will be assigned automatically
+        """
         attrs_u = self.node_attrs(edge[0])
         attrs_v = self.node_attrs(edge[1])
         x, y = util.avg_point_from_node_attrs((attrs_u, attrs_v))
         edge_attrs = self.edge_attrs(edge)
 
-        h_node = Node(NodeAttrs('v', x, y, flag=True), handle=hanging_node_handle)
+        hanging = node_flag if node_flag is not None else not edge_attrs.flag
+
+        h_node = Node(NodeAttrs('v', x, y, flag=hanging), handle=node_handle)
 
         self.remove_edge_with_endpoints(edge)
         self.add_node(h_node)
