@@ -80,6 +80,11 @@ class Graph:
         gm = nx.isomorphism.GraphMatcher(self._graph, other.nx_graph, node_match=node_equality, edge_match=edge_equality)
         return gm.subgraph_isomorphisms_iter()
 
+    def generate_subgraphs_monomorphic_with(self, other: 'Graph') -> Iterable[GraphMapping]:
+        gm = nx.isomorphism.GraphMatcher(self._graph, other.nx_graph, node_match=node_equality, edge_match=edge_equality)
+        return gm.subgraph_monomorphisms_iter()
+
+
     def node_for_handle(self, handle: NodeHandle) -> Node:
         return Node(handle=handle, attrs=self[handle])
 
