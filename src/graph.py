@@ -144,7 +144,7 @@ class Graph:
         node_attrs = NodeAttrs('p', x, y, edge_attrs.flag)
         p_node = Node(node_attrs, handle=p_node_handle)
         self.add_node(p_node)
-        self.add_edge(Edge(node.handle, p_node.handle, edge_attrs) for node in nodes)
+        self.add_edge_collection(Edge(node.handle, p_node.handle, edge_attrs) for node in nodes)
 
 
     def remove_p_hyperedge(self, p_node_handle: NodeHandle):
