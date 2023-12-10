@@ -117,7 +117,7 @@ class Graph:
         assert edge_attrs.kind == 'q'
         x, y = util.avg_point_from_nodes(nodes)
         node_attrs = NodeAttrs('q', x, y, edge_attrs.flag)
-        q_node = Node(node_attrs) if q_node_handle is None else Node(node_attrs, q_node_handle)
+        q_node = Node(node_attrs, q_node_handle)
         self.add_node(q_node)
         self.add_edge_collection(Edge(node.handle, q_node.handle, edge_attrs) for node in nodes)
 
@@ -142,7 +142,7 @@ class Graph:
         assert edge_attrs.kind == 'p'
         x, y = p_node_coords if p_node_coords is not None else util.avg_point_from_nodes((nodes[0], nodes[1], nodes[3], nodes[4]))
         node_attrs = NodeAttrs('p', x, y, edge_attrs.flag)
-        p_node = Node(node_attrs) if p_node_handle is None else Node(node_attrs, p_node_handle)
+        p_node = Node(node_attrs, handle=p_node_handle)
         self.add_node(p_node)
         self.add_edge(Edge(node.handle, p_node.handle, edge_attrs) for node in nodes)
 
