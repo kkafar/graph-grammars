@@ -132,7 +132,7 @@ class Graph:
     def add_p_hyperedge(self, nodes: tuple[Node, Node, Node, Node, Node], edge_attrs: EdgeAttrs, p_node_handle: NodeHandle = None, p_node_coords: tuple[float, float] = None):
         """ Add P-hyperedge to the graph.
 
-        :param nodes: tuple/list of FIVE nodes, that the P-hyperedge should connect; ORDER OF THE NODES MATTER FOR THE LAYOUT, see below
+        :param nodes: tuple/list of FIVE nodes, that the P-hyperedge should connect; ORDER OF THE NODES MATTERS FOR THE LAYOUT, see below
         :param edge_attrs: shared attributes for all the edges that the hyperedge is comprised of
         :param p_node_handle: optional node handle for the P-hypernode; if not specified an graph-unique id will be assiged automaticaly
         :param p_node_coords: optional tuple with coordinates for the P-hypernode; if not specified the position will be calculated as mean point between: nodes[0], nodes[1], nodes[3], nodes[4]
