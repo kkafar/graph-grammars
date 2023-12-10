@@ -1,6 +1,6 @@
 from typing import Dict, Iterable
 import itertools as it
-from model import Node
+from model import Node, NodeAttrs
 
 
 def reverse_dict_mapping(dictionary: Dict[int, int]) -> Dict[int, int]:
@@ -35,3 +35,8 @@ def avg_point_from_nodes(nodes: Iterable[Node]) -> tuple[float, float]:
     y = sum(map(lambda node: node.attrs.y, nodes)) / count
     return (x, y)
 
+def avg_point_from_node_attrs(node_attrs: Iterable[NodeAttrs]) -> tuple[float, float]:
+    count = len(node_attrs)
+    x = sum(map(lambda attrs: attrs.x, node_attrs)) / count
+    y = sum(map(lambda attrs: attrs.y, node_attrs)) / count
+    return (x, y)
