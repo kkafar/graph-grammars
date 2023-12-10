@@ -42,7 +42,6 @@ class Production:
         else:
             mapping_gen = graph.generate_subgraphs_isomorphic_with(lhs)
 
-
         for mapping in mapping_gen:
             self._rev_mapping = util.reverse_dict_mapping(mapping)
             if self.is_mapping_feasible(graph, mapping):
