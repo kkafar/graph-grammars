@@ -29,14 +29,20 @@ class Production:
         see https://networkx.org/documentation/stable/reference/algorithms/isomorphism.vf2.html#subgraph-isomorphism
         for details.
 
-        :returns: bool is the production can be successfully applied, false if not"""
+        :return: bool is the production can be successfully applied, false if not"""
         return True
         # raise NotImplementedError("This method must be overrided in subclasses")
 
     def apply(self, graph: Graph) -> bool:
         self.reset()
         lhs = self.get_lhs()
-        for mapping in graph.generate_subgraphs_isomorphic_with(lhs):
+
+        if self.requires_monomorphism():
+            mapping_gen = graph.generate_subgraphs_monomorphic_with(lhs)
+        else:
+            mapping_gen = graph.generate_subgraphs_isomorphic_with(lhs)
+
+        for mapping in mapping_gen:
             self._rev_mapping = util.reverse_dict_mapping(mapping)
             if self.is_mapping_feasible(graph, mapping):
                 self.apply_with_mapping(graph, mapping)
@@ -57,4 +63,17 @@ class Production:
 
     def __call__(self, graph: Graph) -> bool:
         return self.apply(graph)
+
+
+    def requires_monomorphism(self) -> bool:
+        """ Return True from this method if your production requires monomorphism instead of subgraph isomorphism.
+
+        Q: How do I know whether my production requires monomorphism?
+        A: Implement it first & see whether you receive appropriate mappings. If not, override this method and return False.
+        You will need it most likely in productions that operate only on some subset of the whole set of edges of the node-induced subgraph.
+        Read this section for more info: https://networkx.org/documentation/stable/reference/algorithms/isomorphism.vf2.html#subgraph-isomorphism
+
+        :return: True if monomorphic mappings should be generated; defaults to False
+        """
+        return False
 
