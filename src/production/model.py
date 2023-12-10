@@ -72,6 +72,8 @@ class Production:
         A: Implement it first & see whether you receive appropriate mappings. If not, override this method and return False.
         You will need it most likely in productions that operate only on some subset of the whole set of edges of the node-induced subgraph.
         Read this section for more info: https://networkx.org/documentation/stable/reference/algorithms/isomorphism.vf2.html#subgraph-isomorphism
+
+        :return: True if monomorphic mappings should be generated; defaults to False
         """
         return False
 
