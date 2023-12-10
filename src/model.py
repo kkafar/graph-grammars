@@ -1,34 +1,65 @@
 import itertools as it
-from typing import NamedTuple, Literal, Optional, Dict
+from typing import NamedTuple, Literal, Optional, Dict, Callable
 from dataclasses import dataclass, field
 
-class NodeAttrs(NamedTuple):
-    label: str
-    x: float
-    y: float
-    hanging: bool
-
-    def __str__(self, i: int = None) -> str:
-        return f'{i}\nl={self.label}, h={self.hanging}\nx={self.x}, y={self.y}'
-
-class EdgeAttrs(NamedTuple):
-    kind: Literal['e'] | Literal['q']
-    value: bool  # Interpretation of this field depends on edge kind. See presentation with project spec.
-
-    def __str__(self) -> str:
-        return f'kind={self.kind}, r/b={self.value}'
 
 NodeHandle = int
+EdgeHandle = int
+
+
+class EdgeEndpoints(NamedTuple):
+    u: NodeHandle
+    v: NodeHandle
+
 
 @dataclass
-class Node:
-    attrs: NodeAttrs
-    handle: NodeHandle = field(default_factory=it.count().__next__, init=True)
+class NodeAttrs:
+    label: Literal['v'] | Literal['q'] | Literal['p']
+    x: float
+    y: float
+    flag: bool  # Interpretation of this field depends on edge kind. See presentation with project spec
 
-class Edge(NamedTuple):
+    def __str__(self, i: int = None) -> str:
+        return (f'{i}, ' if i is not None else '') + f'{self.label}, {self.flag}\nx={self.x}, y={self.y}'
+
+
+@dataclass
+class EdgeAttrs:
+    kind: Literal['e'] | Literal['q']
+    flag: bool  # Interpretation of this field depends on edge kind. See presentation with project spec.
+    handle: EdgeHandle = field(default_factory=it.count().__next__, init=True)
+
+    def __str__(self) -> str:
+        return f'{self.kind}, {self.flag}, {self.handle}'
+
+
+class Node:
+    __slots__ = (
+        'attrs',
+        'handle'
+    )
+
+    def __init__(self, attrs: NodeAttrs, handle: NodeHandle = None, handle_factory: Callable[[], int] = None) -> None:
+        self.attrs: NodeAttrs = attrs
+        self.handle: NodeHandle = handle
+
+        if self.handle is None and handle_factory is not None:
+            self.handle = handle_factory()
+            assert self.handle is not None
+
+    def __str__(self) -> str:
+        return f'Node(attrs=NodeAttrs(l={self.attrs.label}, x={self.attrs.x}, y={self.attrs.y}, flag={self.attrs.flag}), handle={self.handle})'
+
+
+@dataclass
+class Edge:
     u: NodeHandle
     v: NodeHandle
     attrs: EdgeAttrs
 
+    def get_endpoints(self) -> EdgeEndpoints:
+        return EdgeEndpoints(u, v)
+
 
 GraphMapping = Dict[NodeHandle, NodeHandle]
+
