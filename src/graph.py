@@ -161,13 +161,14 @@ class Graph:
         self.remove_node(p_node_handle)
 
 
-    def split_edge_with_vnode(self, edge: EdgeEndpoints, node_flag: bool = None, node_handle: NodeHandle = None):
+    def split_edge_with_vnode(self, edge: EdgeEndpoints, node_flag: bool = None, node_handle: NodeHandle = None) -> Node:
         """ Splits given edge with new 'v' node.
 
         :param edge: endpoints of the to-be-splitted edge
         :param node_flag: optional flag for the new node; if not specified it will default to negated flag value of the edge that is being split
                           as it is required in most of the productions
         :param node_handle: optional handle for the new node; if not specified an graph-unique id will be assigned automatically
+        :return: newly created node
         """
         attrs_u = self.node_attrs(edge[0])
         attrs_v = self.node_attrs(edge[1])
@@ -182,6 +183,8 @@ class Graph:
         self.add_node(h_node)
         self.add_edge(Edge(edge[0], h_node.handle, EdgeAttrs(kind='e', flag=edge_attrs.flag)))
         self.add_edge(Edge(h_node.handle, edge[1], EdgeAttrs(kind='e', flag=edge_attrs.flag)))
+
+        return h_node
 
 
     @property
