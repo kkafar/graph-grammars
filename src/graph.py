@@ -53,6 +53,7 @@ class Graph:
     def remove_node(self, handle: NodeHandle):
         self._graph.remove_node(handle)
 
+
     def remove_node_collection(self, node_collection: Iterable[NodeHandle]):
         for node in node_collection:
             self.remove_node(node)
@@ -66,6 +67,10 @@ class Graph:
 
     def remove_edge(self, handle_1: NodeHandle, handle_2: NodeHandle):
         self._graph.remove_edge(handle_1, handle_2)
+
+    def remove_edge_with_endpoints(self, edge: EdgeEndpoints):
+        # Leaving method `remove_edge` to avoid refactorings & keeping backward compat
+        self._graph.remove_edge(edge[0], edge[1])
 
     def remove_edge_collection(self, edge_collection: Iterable[Edge]):
         for edge in edge_collection:
@@ -154,6 +159,20 @@ class Graph:
         p_node_attrs = self.node_attrs(p_node_handle)
         assert p_node_attrs.label == 'p', f"Attempt to remove P hyperedge with handle for node with attrs {p_node_attrs}, label={p_node_attrs.label}"
         self.remove_node(p_node_handle)
+
+
+    def split_edge_with_hanging_node(self, edge: EdgeEndpoints, hanging_node_handle: NodeHandle = None):
+        attrs_u = self.node_attrs(edge[0])
+        attrs_v = self.node_attrs(edge[1])
+        x, y = util.avg_point_from_node_attrs((attrs_u, attrs_v))
+        edge_attrs = self.edge_attrs(edge)
+
+        h_node = Node(NodeAttrs('v', x, y, flag=True), handle=hanging_node_handle)
+
+        self.remove_edge_with_endpoints(edge)
+        self.add_node(h_node)
+        self.add_edge(Edge(edge[0], h_node.handle, EdgeAttrs(kind='e', flag=edge_attrs.flag)))
+        self.add_edge(Edge(h_node.handle, edge[1], EdgeAttrs(kind='e', flag=edge_attrs.flag)))
 
 
     @property
