@@ -37,16 +37,6 @@ class P17(Production):
         graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
         graph.add_edge(Edge(node_5.handle, node_3.handle, EdgeAttrs(kind='e', flag=False)))
 
-        # left side edges
-        graph.add_edge(Edge(node_1.handle, node_8.handle, EdgeAttrs(kind='e', flag=False)))
-        graph.add_edge(Edge(node_8.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
-        graph.add_edge(Edge(node_3.handle, node_4.handle, EdgeAttrs(kind='e', flag=False)))
-        graph.add_edge(Edge(node_4.handle, node_1.handle, EdgeAttrs(kind='e', flag=False)))
-
-        # right side edges
-        graph.add_edge(Edge(node_3.handle, node_7.handle, EdgeAttrs(kind='e', flag=False)))
-        graph.add_edge(Edge(node_7.handle, node_6.handle, EdgeAttrs(kind='e', flag=False)))
-        graph.add_edge(Edge(node_6.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
 
         # graph.display()
         # plt.show()
