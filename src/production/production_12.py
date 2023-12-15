@@ -83,7 +83,6 @@ class P12(Production):
         graph.remove_p_hyperedge(q_node.handle)
 
         # # add Q edges
-        # dokończyć
         assert len(new_border_nodes) == 3
         new_border_nodes.insert(0, hanging_node_1)
         new_border_nodes.insert(3, hanging_node_2)
