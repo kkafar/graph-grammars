@@ -5,6 +5,7 @@ from .production_5 import P5
 from .production_6 import P6
 from .production_11 import P11
 from .production_12 import P12
+from .production_17 import P17
 
 
 __all__ = (
@@ -14,6 +15,7 @@ __all__ = (
     P5,
     P6,
     P11,
-    P12
+    P12,
+    P17
 )
 
