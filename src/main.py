@@ -4,7 +4,7 @@ import itertools as it
 import matplotlib.pyplot as plt
 from model import NodeHandle, NodeAttrs, EdgeAttrs, Node, Edge
 from graph import Graph
-from production import Production, P1, P2, P5, P6, P11, P12
+from production import Production, P1, P2, P5, P6, P11, P12, P17
 
 def main():
     graph = Graph()
@@ -221,6 +221,42 @@ def test_production12():
     P12()(graph)
 
 
+def test_production17():
+    graph = Graph()
+
+    node_1 = Node(NodeAttrs('v', 0, 0, False), 1)
+    node_2 = Node(NodeAttrs('v', 1, 0, False), 2)
+    node_3 = Node(NodeAttrs('v', 1, 1, False), 3)
+    node_4 = Node(NodeAttrs('v', 0, 1, False), 4)
+    node_5 = Node(NodeAttrs('v', 1, 0.5, True), 5)
+    node_6 = Node(NodeAttrs('v', 2, 0.5, False), 6)
+    node_7 = Node(NodeAttrs('v', 2, 1, False), 7)
+    node_8 = Node(NodeAttrs('v', 0.5, 0, False), 8)
+
+    nodes = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8]
+
+    graph.add_node_collection(nodes)
+
+    graph.add_p_hyperedge([node_1, node_2, node_3, node_4, node_8], EdgeAttrs('p', False), 9)
+    graph.add_q_hyperedge([node_5, node_6, node_7, node_3], EdgeAttrs('q', True))
+
+    graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_5.handle, node_3.handle, EdgeAttrs(kind='e', flag=False)))
+
+    # left side edges
+    graph.add_edge(Edge(node_1.handle, node_8.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_8.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_3.handle, node_4.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_4.handle, node_1.handle, EdgeAttrs(kind='e', flag=False)))
+
+    # right side edges
+    graph.add_edge(Edge(node_3.handle, node_7.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_7.handle, node_6.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_6.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
+
+    P17()(graph)
+
+
 if __name__ == '__main__':
     plt.rcParams['figure.figsize'] = (16, 9)
     # test_production()
@@ -228,5 +264,6 @@ if __name__ == '__main__':
     # test_production5()
     # test_production6()
     # test_production11()
-    test_production12()
+    # test_production12()
+    test_production17()
     # main()
