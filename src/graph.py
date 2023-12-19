@@ -191,6 +191,8 @@ class Graph:
 
         return h_node
 
+    def dump_edge(self, fname):
+        nx.write_edgelist(self._graph, fname)
 
     @property
     def nx_graph(self) -> nx.Graph:
