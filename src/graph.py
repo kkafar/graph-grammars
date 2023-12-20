@@ -19,14 +19,12 @@ def node_equality(nx_node_attrs_1, nx_node_attrs_2) -> bool:
         attrs_1.flag == attrs_2.flag
     )
 
-
 def edge_equality(nx_edge_attrs_1, nx_edge_attrs_2) -> bool:
     attrs_1: EdgeAttrs = nx_edge_attrs_1['payload']
     attrs_2: EdgeAttrs = nx_edge_attrs_2['payload']
 
     return (
-        attrs_1.kind == attrs_2.kind and
-        attrs_2.flag == attrs_2.flag
+        attrs_1.kind == attrs_2.kind
     )
 
 
@@ -145,12 +143,12 @@ class Graph:
         :param nodes: tuple/list of FIVE nodes, that the P-hyperedge should connect; ORDER OF THE NODES MATTERS FOR THE LAYOUT, see below
         :param edge_attrs: shared attributes for all the edges that the hyperedge is comprised of
         :param p_node_handle: optional node handle for the P-hypernode; if not specified an graph-unique id will be assigned automatically
-        :param p_node_coords: optional tuple with coordinates for the P-hypernode; if not specified the position will be calculated as mean point between: nodes[0], nodes[1], nodes[3], nodes[4]
+        :param p_node_coords: optional tuple with coordinates for the P-hypernode; if not specified the position will be calculated as mean point between: nodes[0], nodes[1], nodes[2], nodes[3], nodes[4]
         """
 
         assert len(nodes) == 5
         assert edge_attrs.kind == 'p'
-        x, y = p_node_coords if p_node_coords is not None else util.avg_point_from_nodes((nodes[0], nodes[1], nodes[3], nodes[4]))
+        x, y = p_node_coords if p_node_coords is not None else util.avg_point_from_nodes(nodes)
         node_attrs = NodeAttrs('p', x, y, edge_attrs.flag)
         p_node = Node(node_attrs, handle=p_node_handle)
         self.add_node(p_node)
@@ -191,6 +189,8 @@ class Graph:
 
         return h_node
 
+    def dump_edge(self, fname):
+        nx.write_edgelist(self._graph, fname)
 
     @property
     def nx_graph(self) -> nx.Graph:

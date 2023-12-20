@@ -52,3 +52,12 @@ https://docs.google.com/document/d/1aBiGuepeNUuPSGl8aK_Ilit3hJedHvKwng_xBeh43OY/
 
 In case of any changes to this structure please remember to edit readme & put these changes in compact, **dedicated** PR.
 
+## Running examples
+
+Run examples with visualisation:
+
+```bash
+cd src
+cd example
+python run.py <arg>
+```
