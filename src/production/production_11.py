@@ -70,14 +70,15 @@ class P11(Production):
 
         # the central node
         # the central node
+            
+        graph.remove_p_hyperedge(q_node.handle)
+
         x, y = util.avg_point_from_nodes(corner_nodes)
         central_node = Node(NodeAttrs('v', x, y, flag=False))
         graph.add_node(central_node)
 
         for node in new_border_nodes + [hanging_node_1, hanging_node_2]:
             graph.add_edge(Edge(node.handle, central_node.handle, EdgeAttrs('e', False)))
-        
-        graph.remove_p_hyperedge(q_node.handle)
 
         # # add Q edges
         assert len(new_border_nodes) == 3
