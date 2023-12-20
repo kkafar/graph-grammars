@@ -45,7 +45,7 @@ class P11(Production):
 
         # counter-clock-wise
         in_order_nodes = [graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 2, 3, 4, 5, 6, 7)]
-        corner_nodes = [node for node in in_order_nodes[:-2]]
+        corner_nodes = [node for node in in_order_nodes[:-3]]
         
         hanging_node_1 = graph.node_for_handle(rev_mapping[5])
         hanging_node_2 = graph.node_for_handle(rev_mapping[6])
@@ -83,6 +83,9 @@ class P11(Production):
         assert len(new_border_nodes) == 3
         new_border_nodes.insert(0, hanging_node_1)
         new_border_nodes.append(hanging_node_2)
+
+        node_3 = corner_nodes.pop()
+        corner_nodes.insert(2, node_3)
 
         for corner_node, new_nodes in zip(corner_nodes, it.pairwise([new_border_nodes[-1]] + new_border_nodes)):
             graph.add_q_hyperedge((corner_node, *new_nodes, central_node), EdgeAttrs('q', False))
