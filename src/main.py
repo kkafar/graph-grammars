@@ -204,6 +204,43 @@ def test_production11():
     graph.display()
     plt.savefig("graph11_modified.png")
 
+def test_production11_complex():
+    graph = Graph()
+
+    node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
+    node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
+    node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
+    node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
+    node_4 = Node(NodeAttrs('v', 1.83, 0.5, False), 4)
+    node_5 = Node(NodeAttrs('v', 0.5, 0, True), 5)
+    node_6 = Node(NodeAttrs('v', 0, 0.5, True), 6)
+
+    node_8 = Node(NodeAttrs('v', 1, 2, True), 8)
+    node_9 = Node(NodeAttrs('v', 0, 2, True), 9)
+    nodes = [node_0, node_5, node_1, node_4, node_2, node_3, node_6, node_8, node_9]
+    corner_nodes = (node_0, node_1, node_2, node_3, node_4)
+
+    graph.add_node_collection(nodes)
+
+    graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True), 7)
+
+    for node_a, node_b in it.pairwise(nodes[:-2] + [node_0]):
+        graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
+    
+    graph.add_edge(Edge(node_2.handle, node_8.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_8.handle, node_9.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_9.handle, node_3.handle, EdgeAttrs(kind='e', flag=False)))
+
+    graph.add_q_hyperedge((node_2, node_8, node_9, node_3), EdgeAttrs('q', False))
+
+    # graph.display()
+    # plt.savefig("graph11_complex.png")
+
+    P11()(graph)
+
+    graph.display()
+    plt.savefig("graph11_complex_modified.png")
+
 
 def test_production12():
     graph = Graph()
@@ -229,6 +266,47 @@ def test_production12():
 
     graph.display()
     plt.savefig("graph12_modified.png")
+
+
+def test_production12_complex():
+    graph = Graph()
+
+    node_8 = Node(NodeAttrs('v', -1, 0, True), 8)
+    node_9 = Node(NodeAttrs('v', -1, 1, True), 9)
+
+    node_0 = Node(NodeAttrs('v', 0, 0, False))
+    node_1 = Node(NodeAttrs('v', 1, 0, False))
+    node_2 = Node(NodeAttrs('v', 1, 1, False))
+    node_3 = Node(NodeAttrs('v', 0, 1, False))
+    node_4 = Node(NodeAttrs('v', 1.83, 0.5, False))
+    node_5 = Node(NodeAttrs('v', 0.5, 0, True))
+    node_6 = Node(NodeAttrs('v', 0.5, 1, True))
+    nodes = [node_0, node_5, node_1, node_4, node_2, node_6, node_3, node_8, node_9]
+    corner_nodes = (node_0, node_1, node_2, node_3, node_4)
+
+    graph.add_node_collection(nodes)
+
+    graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True), 7)
+
+    for node_a, node_b in it.pairwise(nodes[:-2] + [node_0]):
+        if node_a.handle + node_b.handle == 6 and node_a.handle * node_b.handle == 0:
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
+        else:
+            graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
+    
+    graph.add_edge(Edge(node_0.handle, node_8.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_8.handle, node_9.handle, EdgeAttrs(kind='e', flag=False)))
+    graph.add_edge(Edge(node_9.handle, node_3.handle, EdgeAttrs(kind='e', flag=False)))
+
+    graph.add_q_hyperedge((node_3, node_8, node_9, node_0), EdgeAttrs('q', False))
+
+    # graph.display()
+    # plt.savefig("graph12_complex.png")
+
+    P12()(graph)
+
+    graph.display()
+    plt.savefig("graph12_complex_modified.png")
 
 
 def test_production17():
@@ -269,6 +347,8 @@ if __name__ == '__main__':
     # test_production5()
     # test_production6()
     # test_production11()
+    test_production11_complex()
     # test_production12()
-    test_production17()
+    # test_production12_complex()
+    # test_production17()
     # main()
