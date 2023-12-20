@@ -44,6 +44,8 @@ class Graph:
         """
         if node.handle is None:
             node.handle = self._node_handle_factory()
+        else:
+            self._node_handle_factory()
         self._graph.add_node(node.handle, payload=node.attrs)
         return node.handle
 
