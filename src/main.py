@@ -4,7 +4,7 @@ import itertools as it
 import matplotlib.pyplot as plt
 from model import NodeHandle, NodeAttrs, EdgeAttrs, Node, Edge
 from graph import Graph
-from production import Production, P1, P2, P5, P6
+from production import Production, P1, P2, P5, P6, P13
 
 def main():
     graph = Graph()
@@ -136,6 +136,33 @@ def test_production6():
 
     P6()(graph)
 
+def test_production13():
+    graph = Graph()
+
+    node_0 = Node(NodeAttrs('v', 0, 0, False))
+    node_1 = Node(NodeAttrs('v', 1, 0, False))
+    node_2 = Node(NodeAttrs('v', 1.5, 0.5, False))
+    node_3 = Node(NodeAttrs('v', 1, 1, False))
+    node_4 = Node(NodeAttrs('v', 0, 1, False))
+    corner_nodes = (node_0, node_1, node_2, node_3, node_4)
+
+    node_5 = Node(NodeAttrs('v', 0.5, 0, True))
+    node_6 = Node(NodeAttrs('v', 0.5, 1, True))
+    node_7 = Node(NodeAttrs('v', 0, 0.5, True))
+    
+    nodes = [node_0, node_5, node_1, node_2, node_3, node_6, node_4, node_7]
+    graph.add_node_collection(nodes)
+
+    graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True))
+
+    for node_a, node_b in it.pairwise(nodes + [node_0]):
+        graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
+
+    P13()(graph)
+    graph.display()
+
+    plt.show()
+
 
 def monomorphisms():
     fig, plots = plt.subplots(nrows=1, ncols=2)
@@ -175,13 +202,5 @@ def monomorphisms():
     print(f"Isomorphic count: {len(isomorphic_mappings)}, Monomorhpic count: {len(monomorphic_mappings)}")
 
 
-
-
 if __name__ == '__main__':
     plt.rcParams['figure.figsize'] = (16, 9)
-    # test_production()
-    # test_production2()
-    # monomorphisms()
-    # test_production5()
-    test_production6()
-    # main()
