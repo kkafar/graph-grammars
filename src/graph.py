@@ -33,8 +33,9 @@ class NodeHandleGenerator:
         self._counter = it.count(start=initial_value)
 
     def skip(self, n: int) -> None:
+        assert n > 0
         current = self._counter.__next__()
-        self._counter = it.count(start=current + n)
+        self._counter = it.count(start=current + n - 1)
 
     def __call__(self) -> NodeHandle:
         return self._counter.__next__()
