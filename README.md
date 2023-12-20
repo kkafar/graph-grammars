@@ -57,7 +57,6 @@ In case of any changes to this structure please remember to edit readme & put th
 Run examples with visualisation:
 
 ```bash
-cd src
-cd example
+cd src/example
 python run.py <arg>
 ```
