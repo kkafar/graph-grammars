@@ -45,7 +45,7 @@ class P12(Production):
 
         # counter-clock-wise
         in_order_nodes = [graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 2, 3, 4, 5, 6, 7)]
-        corner_nodes = [node for node in in_order_nodes[:-2]]
+        corner_nodes = [node for node in in_order_nodes[:-3]]
         v_nodes = [
             graph.node_for_handle(rev_mapping[i]) for i in (0, 3, 6, 2, 4, 1, 5, 0)
         ]
@@ -76,6 +76,9 @@ class P12(Production):
         x, y = util.avg_point_from_nodes(corner_nodes)
         central_node = Node(NodeAttrs('v', x, y, flag=False))
         graph.add_node(central_node)
+
+        node_3 = corner_nodes.pop()
+        corner_nodes.insert(2, node_3)
 
         for node in new_border_nodes + [hanging_node_1, hanging_node_2]:
             graph.add_edge(Edge(node.handle, central_node.handle, EdgeAttrs('e', False)))
