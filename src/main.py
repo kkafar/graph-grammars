@@ -195,7 +195,14 @@ def test_production11():
     for node_a, node_b in it.pairwise(nodes + [node_0]):
         graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
 
+    # graph.display()
+    # plt.savefig("graph11_basic.png")
+    # plt.show()
+
     P11()(graph)
+
+    graph.display()
+    plt.savefig("graph11_modified.png")
 
 
 def test_production12():
@@ -220,6 +227,9 @@ def test_production12():
 
     P12()(graph)
 
+    graph.display()
+    plt.savefig("graph12_modified.png")
+
 
 def test_production17():
     graph = Graph()
@@ -243,18 +253,13 @@ def test_production17():
     graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
     graph.add_edge(Edge(node_5.handle, node_3.handle, EdgeAttrs(kind='e', flag=False)))
 
-    # left side edges
-    graph.add_edge(Edge(node_1.handle, node_8.handle, EdgeAttrs(kind='e', flag=False)))
-    graph.add_edge(Edge(node_8.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
-    graph.add_edge(Edge(node_3.handle, node_4.handle, EdgeAttrs(kind='e', flag=False)))
-    graph.add_edge(Edge(node_4.handle, node_1.handle, EdgeAttrs(kind='e', flag=False)))
-
-    # right side edges
-    graph.add_edge(Edge(node_3.handle, node_7.handle, EdgeAttrs(kind='e', flag=False)))
-    graph.add_edge(Edge(node_7.handle, node_6.handle, EdgeAttrs(kind='e', flag=False)))
-    graph.add_edge(Edge(node_6.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
+    # graph.display()
+    # plt.savefig("graph17_basic.png")
 
     P17()(graph)
+
+    graph.display()
+    plt.savefig("graph17_modified.png")
 
 
 if __name__ == '__main__':
