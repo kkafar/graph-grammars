@@ -58,8 +58,8 @@ class Graph:
 
     def add_node(self, node: Node) -> NodeHandle:
         """ IMPORTANT:
-        If the node.handle == None the we generate graph-wide-unique handle here
-        or throw if conflict is detected.
+        If the node.handle == None the we generate graph-wide-unique handle here. It it is not None and
+        node with that handle already exists in the graph this method raises AssertionError.
         """
         if node.handle is None:
             node.handle = self._find_graph_unique_node_handle()
