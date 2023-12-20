@@ -48,16 +48,16 @@ class P17(Production):
         rev_mapping = self._rev_mapping
 
         # counter-clock-wise
-        in_order_nodes = [graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 2, 3, 4, 5, 6, 7)]
-        corner_nodes = [in_order_nodes[0], in_order_nodes[1], in_order_nodes[2], in_order_nodes[3], in_order_nodes[7]]
-        
+        in_order_nodes = [graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)]
+        corner_nodes = [in_order_nodes[1], in_order_nodes[2], in_order_nodes[3], in_order_nodes[4], in_order_nodes[8]]
+
         node_p = graph.node_for_handle(rev_mapping[9])
 
         # change hanging value of hanging node
         # we actualy have reference to this node, so we can modify it in place
         graph.remove_p_hyperedge(node_p.handle)
 
-        graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', False), 9)
+        graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True), 9)
 
         # edges printing to check if graph was changed properly
         nodes = graph.nx_graph.nodes.data()
