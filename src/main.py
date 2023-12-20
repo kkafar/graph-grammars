@@ -4,7 +4,7 @@ import itertools as it
 import matplotlib.pyplot as plt
 from model import NodeHandle, NodeAttrs, EdgeAttrs, Node, Edge
 from graph import Graph
-from production import Production, P1, P2, P5, P6, P13
+from production import Production, P1, P2, P5, P6, P13, P14, P15
 
 def main():
     graph = Graph()
@@ -163,6 +163,62 @@ def test_production13():
 
     plt.show()
 
+def test_production14():
+    graph = Graph()
+
+    node_0 = Node(NodeAttrs('v', 0, 0, False))
+    node_1 = Node(NodeAttrs('v', 1, 0, False))
+    node_2 = Node(NodeAttrs('v', 1.5, 0.5, False))
+    node_3 = Node(NodeAttrs('v', 1, 1, False))
+    node_4 = Node(NodeAttrs('v', 0, 1, False))
+    corner_nodes = (node_0, node_1, node_2, node_3, node_4)
+
+    node_5 = Node(NodeAttrs('v', 0.5, 0, True))
+    node_6 = Node(NodeAttrs('v', 0.5, 1, True))
+    node_7 = Node(NodeAttrs('v', 0, 0.5, True))
+    node_8 = Node(NodeAttrs('v', 1.25, 0.75, True))
+    
+    nodes = [node_0, node_5, node_1, node_2, node_8, node_3, node_6, node_4, node_7]
+    graph.add_node_collection(nodes)
+
+    graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True))
+
+    for node_a, node_b in it.pairwise(nodes + [node_0]):
+        graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
+
+    P14()(graph)
+    graph.display()
+
+    plt.show()
+
+def test_production15():
+    graph = Graph()
+
+    node_0 = Node(NodeAttrs('v', 0, 0, False))
+    node_1 = Node(NodeAttrs('v', 1, 0, False))
+    node_2 = Node(NodeAttrs('v', 1.5, 0.5, False))
+    node_3 = Node(NodeAttrs('v', 1, 1, False))
+    node_4 = Node(NodeAttrs('v', 0, 1, False))
+    corner_nodes = (node_0, node_1, node_2, node_3, node_4)
+
+    node_5 = Node(NodeAttrs('v', 0.5, 0, True))
+    node_6 = Node(NodeAttrs('v', 0.5, 1, True))
+    node_7 = Node(NodeAttrs('v', 0, 0.5, True))
+    node_8 = Node(NodeAttrs('v', 1.25, 0.75, True))
+    node_9 = Node(NodeAttrs('v', 1.25, 0.25, True))
+    
+    nodes = [node_0, node_5, node_1, node_9, node_2, node_8, node_3, node_6, node_4, node_7]
+    graph.add_node_collection(nodes)
+
+    graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True))
+
+    for node_a, node_b in it.pairwise(nodes + [node_0]):
+        graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
+
+    P15()(graph)
+    graph.display()
+
+    plt.show()
 
 def monomorphisms():
     fig, plots = plt.subplots(nrows=1, ncols=2)
