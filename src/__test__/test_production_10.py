@@ -39,32 +39,6 @@ class TestProduction10(unittest.TestCase):
         graph.split_edge_with_vnode(edge=(0, 1), node_flag=True)
         self.assertTrue(self.is_any_mapping_feasible(graph))
 
-    # def test_production_can_be_applied_on_more_complex_graph(self):
-        # graph = Graph()
-
-        # node_0 = Node(NodeAttrs('v', 0, 0, False))
-        # node_1 = Node(NodeAttrs('v', 1, 0, False))
-        # node_2 = Node(NodeAttrs('v', 1, 1, False))
-        # node_3 = Node(NodeAttrs('v', 0, 1, False))
-        # node_4 = Node(NodeAttrs('v', 0.25, 1, True))
-        # node_5 = Node(NodeAttrs('v', 0, 0.5, True))
-        # node_6 = Node(NodeAttrs('v', 0.25, 0, True))
-        # node_7 = Node(NodeAttrs('v', 0.5, 1, False))
-        # node_8 = Node(NodeAttrs('v', 0.5, 0, False))
-        # node_9 = Node(NodeAttrs('v', 0.5, 0.5, True))
-        # nodes = [node_0, node_6, node_8, node_1, node_2, node_7, node_4, node_3, node_5, node_9]
-
-        # graph.add_node_collection(nodes)
-        # graph.add_q_hyperedge((node_0, node_8, node_7, node_3), EdgeAttrs('q', True))
-        # graph.add_q_hyperedge((node_8, node_1, node_2, node_7), EdgeAttrs('q', True))
-
-        # graph.add_edge(Edge(node_7.handle, node_9.handle, EdgeAttrs(kind='e', flag=False)))
-        # graph.add_edge(Edge(node_9.handle, node_8.handle, EdgeAttrs(kind='e', flag=False)))
-        # for node_1, node_2 in it.pairwise(nodes[:-1] + [node_0]):
-        #     graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
-
-        # self.assertTrue(self.is_any_mapping_feasible(graph))
-
     def test_production_cannot_be_applied_if_no_hanging(self):
         graph = Graph()
         
