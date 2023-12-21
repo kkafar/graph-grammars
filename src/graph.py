@@ -28,20 +28,43 @@ def edge_equality(nx_edge_attrs_1, nx_edge_attrs_2) -> bool:
     )
 
 
+class NodeHandleGenerator:
+    def __init__(self, initial_value: int = 0) -> None:
+        self._counter = it.count(start=initial_value)
+
+    def skip(self, n: int) -> None:
+        assert n > 0
+        current = self._counter.__next__()
+        self._counter = it.count(start=current + n - 1)
+
+    def __call__(self) -> NodeHandle:
+        return self._counter.__next__()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self._counter.__next__()
+
+
+
 class Graph:
     def __init__(self) -> None:
         self._graph = nx.Graph()
-        self._node_handle_factory = it.count().__next__
+        self._node_handle_factory = NodeHandleGenerator(initial_value=0)
 
     def __contains__(self, node: NodeHandle) -> bool:
         return self._graph.has_node(node)
 
     def add_node(self, node: Node) -> NodeHandle:
         """ IMPORTANT:
-        If the node.handle == None the we generate graph-wide-unique handle here
+        If the node.handle == None the we generate graph-wide-unique handle here. It it is not None and
+        node with that handle already exists in the graph this method raises AssertionError.
         """
         if node.handle is None:
-            node.handle = self._node_handle_factory()
+            node.handle = self._find_graph_unique_node_handle()
+
+        assert not self._graph.has_node(node.handle), f"Attempt to add node with handle {node.handle} which already exists"
         self._graph.add_node(node.handle, payload=node.attrs)
         return node.handle
 
@@ -140,7 +163,7 @@ class Graph:
     def add_p_hyperedge(self, nodes: tuple[Node, Node, Node, Node, Node], edge_attrs: EdgeAttrs, p_node_handle: NodeHandle = None, p_node_coords: tuple[float, float] = None):
         """ Add P-hyperedge to the graph.
 
-        :param nodes: tuple/list of FIVE nodes, that the P-hyperedge should connect; ORDER OF THE NODES MATTERS FOR THE LAYOUT, see below
+        :param nodes: tuple/list of FIVE nodes, that the P-hyperedge should connect
         :param edge_attrs: shared attributes for all the edges that the hyperedge is comprised of
         :param p_node_handle: optional node handle for the P-hypernode; if not specified an graph-unique id will be assigned automatically
         :param p_node_coords: optional tuple with coordinates for the P-hypernode; if not specified the position will be calculated as mean point between: nodes[0], nodes[1], nodes[2], nodes[3], nodes[4]
@@ -199,3 +222,19 @@ class Graph:
     @property
     def node_handle_factory(self) -> Callable[[], int]:
         return self._node_handle_factory
+
+
+    def _find_graph_unique_node_handle(self):
+        # We first start by selecting firt **potentially** feasible
+        handle = self._node_handle_factory()
+        if not self._graph.has_node(handle):
+            return handle
+
+        # So we have a conflict. Let's find smallest unique handle
+        biggest_occupied = max(self._graph.nodes.keys())
+
+        self._node_handle_factory.skip(biggest_occupied - handle + 1)
+
+        handle = self._node_handle_factory()
+        return handle
+

@@ -58,7 +58,7 @@ class Edge:
     attrs: EdgeAttrs
 
     def get_endpoints(self) -> EdgeEndpoints:
-        return EdgeEndpoints(u, v)
+        return EdgeEndpoints(self.u, self.v)
 
 
 GraphMapping = Dict[NodeHandle, NodeHandle]
