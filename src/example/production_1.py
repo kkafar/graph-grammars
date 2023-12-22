@@ -1,7 +1,7 @@
 from graph import Graph
 import basic_graph
 import matplotlib.pyplot as plt
-from production.p1 import P1
+from production.production_1 import P1
 
 def test_1():
     graph = Graph()
