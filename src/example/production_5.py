@@ -6,6 +6,7 @@ from production import P5
 
 
 def main():
+    fig, plots = plt.subplots(nrows=1, ncols=2)
     graph = Graph()
 
     node_0 = Node(NodeAttrs('v', 0, 0, False))
@@ -24,10 +25,17 @@ def main():
     for node_1, node_2 in it.pairwise(nodes + [node_0]):
         graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
-    graph.display()
-    plt.show()
+    graph.display(ax=plots[0])
+    plots[0].set(title='Before')
 
-    P5()(graph)
+    assert P5()(graph)
+
+    graph.display(ax=plots[1])
+    plots[1].set(title='After')
+
+    fig.suptitle("Applying production 5")
+    fig.tight_layout()
+    plt.show()
 
 
 if __name__ == "__main__":

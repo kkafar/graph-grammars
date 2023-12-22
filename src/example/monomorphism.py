@@ -38,6 +38,7 @@ def main():
     plots[0].set(title='Graph')
     plots[1].set(title='Subgraph')
     fig.suptitle('Monomorphic subgraph detection')
+    fig.tight_layout()
 
     plt.show()
 
