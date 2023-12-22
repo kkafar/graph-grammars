@@ -71,3 +71,6 @@ python src/main.py --name <example_name_without_dot_py_suffix>
 # E.g.
 python src/main.py --name production_1
 ```
+
+For available example names inspect [`example` module](./src/example/)
+
