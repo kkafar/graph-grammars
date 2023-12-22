@@ -45,5 +45,3 @@ class P16(Production):
     
         node_p.attrs.flag = True
 
-        graph.display()
-        plt.show()

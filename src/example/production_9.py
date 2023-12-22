@@ -1,24 +1,30 @@
 from graph import Graph
 import basic_graph
 import matplotlib.pyplot as plt
-from production import P9
+from production import P9, P16
 
 
 def main():
-    fig, plots = plt.subplots(nrows=1, ncols=2)
+    fig, plot = plt.subplots(nrows=1, ncols=1)
     graph = basic_graph.basic_pentagon()
 
-    graph.display(ax=plots[0])
-    plots[0].set(title='Before')
+    assert P16()(graph)
 
-    assert P9()(graph)
-
-    graph.display(ax=plots[1])
-    plots[1].set(title='After')
-
+    graph.display()
+    plot.set(title='Before')
     fig.suptitle("Applying production 9")
     fig.tight_layout()
     plt.show()
+
+    assert P9()(graph)
+
+    fig, plot = plt.subplots(nrows=1, ncols=1)
+    graph.display()
+    plot.set(title='After')
+    fig.suptitle("Applying production 9")
+    fig.tight_layout()
+    plt.show()
+
 
 
 if __name__ == "__main__":
