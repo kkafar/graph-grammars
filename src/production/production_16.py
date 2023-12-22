@@ -43,5 +43,9 @@ class P16(Production):
         # get inner node, the hyperedge
         node_p = graph.node_for_handle(rev_mapping[5])
     
-        node_p.attrs.flag = True
+        x = node_p.attrs.x
+        y = node_p.attrs.y
+        graph.remove_p_hyperedge(node_p.handle)
+        edge_attrs = EdgeAttrs('p', True)
+        graph.add_p_hyperedge(vertices, edge_attrs, node_p.handle, (x,y))
 
