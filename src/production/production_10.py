@@ -89,5 +89,5 @@ class P10(Production):
             nodes = (vert, node_a, node_b, node_p)
             graph.add_q_hyperedge(nodes, node_attr)
 
-        graph.display()
-        plt.show()
+        # graph.display()
+        # plt.show()

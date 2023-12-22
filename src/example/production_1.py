@@ -11,5 +11,7 @@ def test_1():
     plt.show()
 
     P1()(graph)
+    
+    graph.display()
+    plt.show()
 
-#   graph.dump_node("test.adjlist")

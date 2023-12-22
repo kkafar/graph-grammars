@@ -9,6 +9,12 @@ def test_16_9():
     graph = basic_graph.basic_pentagon()
     graph.display()
     plt.show()
+    
     P16()(graph)
+    graph.display()
+    plt.show()
+    
     P9()(graph)
+    graph.display()
+    plt.show()
 

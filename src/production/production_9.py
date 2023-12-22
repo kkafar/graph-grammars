@@ -69,5 +69,5 @@ class P9(Production):
             attr = EdgeAttrs('q', False)
             graph.add_q_hyperedge(nodes, edge_attrs=attr)
 
-        graph.display()
-        plt.show()
+        # graph.display()
+        # plt.show()

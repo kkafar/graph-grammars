@@ -12,7 +12,7 @@ def test_10():
     graph.display()
     plt.show()
 
-    # P16()(graph)
-
     P10()(graph)
+    graph.display()
+    plt.show()
 
