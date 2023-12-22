@@ -14,6 +14,7 @@ from production import Production, P1, P2, P5, P6
 class Args:
     example_name: Optional[str] = None
 
+
 def build_cli() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', required=False, type=str,
