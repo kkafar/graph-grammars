@@ -34,8 +34,13 @@ def main():
     subgraph.add_q_hyperedge(sg_nodes, EdgeAttrs('q', True))
 
     subgraph.display(ax=plots[1])
-    plt.show()
 
+    plots[0].set(title='Graph')
+    plots[1].set(title='Subgraph')
+    fig.suptitle('Monomorphic subgraph detection')
+    fig.tight_layout()
+
+    plt.show()
 
     monomorphic_mappings = list(graph.generate_subgraphs_monomorphic_with(subgraph))
     isomorphic_mappings = list(graph.generate_subgraphs_isomorphic_with(subgraph))
