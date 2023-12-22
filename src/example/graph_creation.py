@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import itertools as it
 from graph import Graph
 from model import Edge, EdgeAttrs, Node, NodeAttrs
 
@@ -22,7 +23,7 @@ def main():
     subgraph = Graph()
     subgraph.add_node_collection(nodes[:2])
     for node_1, node_2 in it.pairwise(nodes[:2]):
-        subgraph.add_edge(Edge(node_1.handle, node_2.handle, None))
+        subgraph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
 
     print('Mapping')
     for mapping in graph.generate_subgraphs_isomorphic_with(subgraph):
@@ -32,6 +33,9 @@ def main():
     graph.display(ax=plots[0])
     subgraph.display(ax=plots[1])
 
-    fig.savefig('graphs.png')
+    plots[0].set(title='Graph')
+    plots[1].set(title='Subgraph of the Graph')
+
     fig.tight_layout()
     plt.show()
+

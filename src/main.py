@@ -2,66 +2,42 @@ import networkx as nx
 import graphviz
 import itertools as it
 import matplotlib.pyplot as plt
+import argparse
+import importlib
+from typing import Optional
+from dataclasses import dataclass, field
 from model import NodeHandle, NodeAttrs, EdgeAttrs, Node, Edge
 from graph import Graph
 from production import Production, P1, P2, P5, P6
 
+@dataclass
+class Args:
+    example_name: Optional[str] = None
+
+def build_cli() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--name', required=False, type=str,
+                        dest='example_name', help='Name of the example to run; if not specified all examples will be run one by one')
+    return parser
+
+
+def run_example(example_name: str):
+    if example_name is None:
+        example_name = 'example'
+    else:
+        example_name = 'example.' + example_name
+
+    try:
+        module = importlib.import_module(example_name)
+        module.main()
+    except ImportError:
+        print(f"Failed to import module with name {example_name}")
+        return
+
+
 def main():
-    graph = Graph()
-
-    node_1 = Node(NodeAttrs('v', 0, 0, False))
-    node_2 = Node(NodeAttrs('v', 1, 0, False))
-    node_3 = Node(NodeAttrs('v', 1, 1, False))
-    node_4 = Node(NodeAttrs('v', 0, 1, False))
-    nodes = [ node_1, node_2, node_3, node_4 ]
-
-    graph.add_node_collection(nodes)
-
-    for node_1, node_2 in it.pairwise(nodes + [node_1]):
-        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
-
-    print(graph.nx_graph.nodes)
-    print(graph.nx_graph.edges)
-
-    subgraph = Graph()
-    subgraph.add_node_collection(nodes[:2])
-    for node_1, node_2 in it.pairwise(nodes[:2]):
-        subgraph.add_edge(Edge(node_1.handle, node_2.handle, None))
-
-    print('Mapping')
-    for mapping in graph.generate_subgraphs_isomorphic_with(subgraph):
-        print(mapping)
-
-    fig, plots = plt.subplots(nrows=1, ncols=2)
-    graph.display(ax=plots[0])
-    subgraph.display(ax=plots[1])
-
-    fig.savefig('graphs.png')
-    fig.tight_layout()
-    plt.show()
-
-
-def test_production():
-    graph = Graph()
-
-    node_1 = Node(NodeAttrs('v', 0, 0, False))
-    node_2 = Node(NodeAttrs('v', 1, 0, False))
-    node_3 = Node(NodeAttrs('v', 1, 1, False))
-    node_4 = Node(NodeAttrs('v', 0, 1, False))
-    nodes = [node_1, node_2, node_3, node_4]
-
-    graph.add_node_collection(nodes)
-
-    # Add two edges of type Q, note that they have the same handle!!!
-    graph.add_q_hyperedge(nodes, EdgeAttrs('q', True))
-
-    for node_1, node_2 in it.pairwise(nodes + [node_1]):
-        graph.add_edge(Edge(node_1.handle, node_2.handle, EdgeAttrs(kind='e', flag=False)))
-
-    graph.display()
-    plt.show()
-
-    assert P1()(graph)
+    args: Args = build_cli().parse_args()
+    run_example(args.example_name)
 
 
 def test_production2():
@@ -183,5 +159,5 @@ if __name__ == '__main__':
     # test_production2()
     # monomorphisms()
     # test_production5()
-    test_production6()
-    # main()
+    # test_production6()
+    main()
