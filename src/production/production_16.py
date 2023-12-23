@@ -42,8 +42,5 @@ class P16(Production):
 
         # get inner node, the hyperedge
         node_p = graph.node_for_handle(rev_mapping[5])
-    
-        node_p.attrs.flag = True
+        graph.update_hyperedge_flag(node_p.handle, flag=True)
 
-        graph.display()
-        plt.show()

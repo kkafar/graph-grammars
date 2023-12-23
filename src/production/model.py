@@ -69,7 +69,7 @@ class Production:
         """ Return True from this method if your production requires monomorphism instead of subgraph isomorphism.
 
         Q: How do I know whether my production requires monomorphism?
-        A: Implement it first & see whether you receive appropriate mappings. If not, override this method and return False.
+        A: Implement it first & see whether you receive appropriate mappings. If not, override this method and return True.
         You will need it most likely in productions that operate only on some subset of the whole set of edges of the node-induced subgraph.
         Read this section for more info: https://networkx.org/documentation/stable/reference/algorithms/isomorphism.vf2.html#subgraph-isomorphism
 
