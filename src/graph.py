@@ -143,6 +143,11 @@ class Graph:
         return Edge(handle_1, handle_2, attrs)
 
 
+    def edge_for_endpoints(self, edge: EdgeEndpoints) -> Edge:
+        attrs = self.edge_attrs(edge)
+        return Edge(edge[0], edge[1], attrs)
+
+
     def display(self, **kwargs):
         positions = {
             node: (self[node].x, self[node].y) for node in self._graph.nodes
@@ -211,6 +216,23 @@ class Graph:
         p_node_attrs = self.node_attrs(p_node_handle)
         assert p_node_attrs.label == 'p', f"Attempt to remove P hyperedge with handle for node with attrs {p_node_attrs}, label={p_node_attrs.label}"
         self.remove_node(p_node_handle)
+
+
+    def update_hyperedge_flag(self, handle: NodeHandle, flag: bool):
+        """ Updates flag value for the given hyperedge, identified by its center node. This method ensures
+        that not only node's flag is changed, but also flags of all edges representing the hyperedge.
+
+        :param handle: handle of the center node representing the hyperedge
+        :param flag: new value for the flag
+        """
+        node_attrs = self.node_attrs(handle)
+        assert node_attrs.label in ('p', 'q'), f"Attempt to modify flag value of not-hyperedge edge (type: {node_attrs.label})"
+
+        edges_out_view = self._graph[handle]
+
+        node_attrs.flag = flag
+        for neigh_handle in edges_out_view.keys():
+            self._graph[handle][neigh_handle]['payload'].flag = flag
 
 
     def split_edge_with_vnode(self, edge: EdgeEndpoints, node_flag: bool = None, node_handle: NodeHandle = None) -> Node:
