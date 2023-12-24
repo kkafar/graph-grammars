@@ -52,7 +52,7 @@ class P14(Production):
         for h_node in hanging_nodes:
             h_node.attrs.flag = False
 
-        # split two edges with new hanging nodes
+        # split edge with new hanging node
         edge_1_2_flag = graph.edge_for_handles(corner_nodes[1].handle, corner_nodes[2].handle).attrs.flag
         node_9 = graph.split_edge_with_vnode(((corner_nodes[1].handle, corner_nodes[2].handle)), not edge_1_2_flag)
 

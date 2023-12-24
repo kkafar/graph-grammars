@@ -53,7 +53,6 @@ class P15(Production):
         for h_node in hanging_nodes:
             h_node.attrs.flag = False
 
-
         # remove p-hyperedge...
         p_node = graph.node_for_handle(rev_mapping[10])
         graph.remove_p_hyperedge(p_node.handle)
@@ -62,14 +61,14 @@ class P15(Production):
         central_node = Node(NodeAttrs('v', p_node.attrs.x, p_node.attrs.y, False))
         graph.add_node(central_node)
 
-        # reorganise hanging nodes list for easier quadrilaterals creation
+        # reorganize hanging nodes list for easier quadrilaterals creation
         hanging_nodes = [hanging_nodes[0], hanging_nodes[4], hanging_nodes[3], hanging_nodes[1], hanging_nodes[2]]
 
         # create 5 e-edges
         for h_node in hanging_nodes:
             graph.add_edge(Edge(h_node.handle, central_node.handle, EdgeAttrs('e', True)))
 
-        # create 5 q-edges
+        # create 5 q-hyperedges
         for i in range(5):
             q_edge_nodes = [corner_nodes[i], hanging_nodes[i], central_node, hanging_nodes[(i - 1) % 5]]
             graph.add_q_hyperedge(q_edge_nodes, EdgeAttrs('q', False))
