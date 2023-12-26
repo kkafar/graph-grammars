@@ -74,3 +74,11 @@ python src/main.py --name production_1
 
 For available example names inspect [`example` module](./src/example/)
 
+## Running tests
+
+Run all unit tests from `src/__test__` module
+
+```bash
+cd src
+python -m unittest -v
+```

@@ -1,4 +1,5 @@
 .venv/
+venv/
 .envrc
 .DS_Store
 *local.*
