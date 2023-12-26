@@ -1,14 +1,8 @@
-import networkx as nx
-import graphviz
-import itertools as it
 import matplotlib.pyplot as plt
 import argparse
 import importlib
 from typing import Optional
-from dataclasses import dataclass, field
-from model import NodeHandle, NodeAttrs, EdgeAttrs, Node, Edge
-from graph import Graph
-from production import Production, P1, P2, P5, P6, P13, P14, P15
+from dataclasses import dataclass
 
 @dataclass
 class Args:
