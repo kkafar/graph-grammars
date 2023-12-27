@@ -1,7 +1,7 @@
 import itertools as it
 import networkx as nx
 from model import (
-    Node, NodeHandle,
+    EdgeHandle, Node, NodeHandle,
     NodeAttrs, Edge,
     EdgeAttrs, GraphMapping,
     EdgeEndpoints
@@ -259,7 +259,41 @@ class Graph:
         self.add_edge(Edge(h_node.handle, edge[1], EdgeAttrs(kind='e', flag=edge_attrs.flag)))
 
         return h_node
+    
+    def get_node_between(self, nodes: tuple[NodeHandle, NodeHandle]) -> Node:
+        """ Returns node that is between two given nodes.
+            Fails if there is no such node or there are more than one.
+        """
+        path = nx.shortest_path(self._graph, nodes[0], nodes[1])
+        assert(len(path)) == 3
+        return self.node_for_handle(path[1])
+    
+    def get_nodes(self) -> list[Node]:
+        """ Returns list of all nodes in the graph."""
+        return list(map(lambda node: Node(node[1], node[0]), self._graph.nodes(data='payload')))
+    
+    def get_edges(self) -> list[Edge]:
+        """ Returns list of all edges in the graph."""
+        return list(map(lambda edge: Edge(edge[0], edge[1], edge[2]), self._graph.edges(data='payload')))
+    
+    def get_real_nodes(self) -> list[Node]:
+        """ Returns list of all real nodes (without hyperedges) in the graph."""
+        return list(filter(lambda node: node.attrs.label == 'v', self.get_nodes()))
+    
+    def get_hyperedge_nodes(self) -> list[Node]:
+        """ Returns list of all 'fake' hyperedge nodes in the graph."""
+        return list(filter(lambda node: node.attrs.label in ('p', 'q'), self.get_nodes()))
 
+    def get_real_edges(self) -> list[Edge]:
+        """ Returns list of all real edges (without hyperedges) in the graph."""
+        return list(filter(lambda edge: edge.attrs.kind == 'e', self.get_edges()))
+    
+    def get_hyperedge_edges(self) -> list[Edge]:
+        """ Returns list of all 'fake' hyperedge edges in the graph."""
+        return list(filter(lambda edge: edge.attrs.kind in ('p', 'q'), self.get_edges()))
+
+    def has_edge(self, edge: EdgeEndpoints) -> bool:
+        return self._graph.has_edge(edge.u, edge.v)
 
     def dump_edge(self, fname):
         nx.write_edgelist(self._graph, fname)
