@@ -41,6 +41,8 @@ pip install -r requirements.txt
 ## Docs about P1, P2
 https://docs.google.com/document/d/1aBiGuepeNUuPSGl8aK_Ilit3hJedHvKwng_xBeh43OY/edit
 
+## Docs about P9, P10, P16
+https://docs.google.com/document/d/1ZC_RhpGh9tiCpAO-3-vagTVkGWLI_ibUFHQICaDonX8/edit?usp=sharing
 
 ## Adding new productions
 
