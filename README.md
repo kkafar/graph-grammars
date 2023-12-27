@@ -44,10 +44,14 @@ https://docs.google.com/document/d/1aBiGuepeNUuPSGl8aK_Ilit3hJedHvKwng_xBeh43OY/
 
 ## Adding new productions
 
-1. Each production should live in separate module: `src/production/production_<production_number>.py`
+1. Each production should live in separate module: `src/production/production_<production_number>.py`.
 2. After implementing the production please reexport it in [main module file](./src/production/__init__.py), so it can be imported straight from it.
-3. Tests live inside `src/__test__/` directory.
-4. Each production should have its own dedicated test module `src/__test__/test_production_<production_number>.py`
+3. Unittests live inside `__test__` module.
+4. Each production should have its own dedicated test module `__test__/test_production_<production_number>.py`.
+5. Unittests should ideally test whether a production can be applied in various case, but also how does the graph look like after applying the production.
+6. Visual examples do live in `example` module.
+7. Each production should have its own dedicated visual example in module `example/production_<production_number>.py`
+8. Visual example modules **must** define `main` method so that it can be called from `main` module (see how few examples are already implemented).
 
 
 In case of any changes to this structure please remember to edit readme & put these changes in compact, **dedicated** PR.
@@ -57,6 +61,24 @@ In case of any changes to this structure please remember to edit readme & put th
 Run examples with visualisation:
 
 ```bash
-cd src/example
-python run.py <arg>
+# Running all examples
+python src/main.py
+
+
+# Running selected example
+python src/main.py --name <example_name_without_dot_py_suffix>
+
+# E.g.
+python src/main.py --name production_1
+```
+
+For available example names inspect [`example` module](./src/example/)
+
+## Running tests
+
+Run all unit tests from `src/__test__` module
+
+```bash
+cd src
+python -m unittest -v
 ```

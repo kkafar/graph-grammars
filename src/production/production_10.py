@@ -57,7 +57,7 @@ class P10(Production):
         graph.add_edge(tmp_edge)
         # change hanging atribute of the node
         hang = graph.split_edge_with_vnode(edge, node_flag=False, node_handle=hdl)
-        
+
         # skip first pair because it already exists
         idx_nodes = [1, 4, 2, 3, 0]
         nodes_shuffled = [vertices[idx] for idx in idx_nodes]
@@ -89,5 +89,3 @@ class P10(Production):
             nodes = (vert, node_a, node_b, node_p)
             graph.add_q_hyperedge(nodes, node_attr)
 
-        # graph.display()
-        # plt.show()
