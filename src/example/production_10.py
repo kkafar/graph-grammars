@@ -17,10 +17,6 @@ def main():
     fig.tight_layout()
     plt.show()
 
-<<<<<<< HEAD
-    P10()(graph)
-    graph.display()
-=======
     assert P10()(graph)
 
     fig, plot = plt.subplots(nrows=1, ncols=1)
@@ -28,7 +24,6 @@ def main():
     plot.set(title='After')
     fig.suptitle("Applying production 10")
     fig.tight_layout()
->>>>>>> origin/main
     plt.show()
 
 
