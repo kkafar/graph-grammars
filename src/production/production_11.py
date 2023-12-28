@@ -18,19 +18,19 @@ class P11(Production):
     def __create_lhs(self) -> Graph:
         graph = Graph()
 
-        node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
-        node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
-        node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
-        node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
-        node_4 = Node(NodeAttrs('v', 1.83, 0.5, False), 4)
-        node_5 = Node(NodeAttrs('v', 0.5, 0, True), 5)
-        node_6 = Node(NodeAttrs('v', 0, 0.5, True), 6)
+        node_0 = Node(NodeAttrs('v', 0, 0, False))
+        node_1 = Node(NodeAttrs('v', 1, 0, False))
+        node_2 = Node(NodeAttrs('v', 1, 1, False))
+        node_3 = Node(NodeAttrs('v', 0, 1, False))
+        node_4 = Node(NodeAttrs('v', 1.83, 0.5, False))
+        node_5 = Node(NodeAttrs('v', 0.5, 0, True))
+        node_6 = Node(NodeAttrs('v', 0, 0.5, True))
         nodes = [node_0, node_5, node_1, node_4, node_2, node_3, node_6]
         corner_nodes = (node_0, node_1, node_2, node_3, node_4)
 
         graph.add_node_collection(nodes)
 
-        graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True), 7)
+        graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True))
 
         for node_a, node_b in it.pairwise(nodes + [node_0]):
             graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
@@ -45,9 +45,9 @@ class P11(Production):
 
         # counter-clock-wise
         in_order_nodes = [graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 2, 3, 4, 5, 6, 7)]
-        corner_nodes = [node for node in in_order_nodes[:-3]]
+        corner_nodes = [in_order_nodes[0], in_order_nodes[2], in_order_nodes[3], in_order_nodes[4], in_order_nodes[5]]
         
-        hanging_node_1 = graph.node_for_handle(rev_mapping[5])
+        hanging_node_1 = graph.node_for_handle(rev_mapping[1])
         hanging_node_2 = graph.node_for_handle(rev_mapping[6])
         q_node = graph.node_for_handle(rev_mapping[7])
 
@@ -56,7 +56,7 @@ class P11(Production):
         hanging_node_1.attrs.flag = False
         hanging_node_2.attrs.flag = False
         new_border_nodes = []
-        for node_a, node_b in ((in_order_nodes[1], in_order_nodes[4]), (in_order_nodes[4], in_order_nodes[2]), (in_order_nodes[2], in_order_nodes[3])):
+        for node_a, node_b in ((in_order_nodes[2], in_order_nodes[3]), (in_order_nodes[3], in_order_nodes[4]), (in_order_nodes[4], in_order_nodes[5])):
             x, y = util.avg_point_from_nodes((node_a, node_b))
             edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
             h = not edge_attrs.flag
@@ -84,9 +84,6 @@ class P11(Production):
         assert len(new_border_nodes) == 3
         new_border_nodes.insert(0, hanging_node_1)
         new_border_nodes.append(hanging_node_2)
-
-        node_3 = corner_nodes.pop()
-        corner_nodes.insert(2, node_3)
 
         for corner_node, new_nodes in zip(corner_nodes, it.pairwise([new_border_nodes[-1]] + new_border_nodes)):
             graph.add_q_hyperedge((corner_node, *new_nodes, central_node), EdgeAttrs('q', False))
