@@ -18,19 +18,19 @@ class P12(Production):
     def __create_lhs(self) -> Graph:
         graph = Graph()
 
-        node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
-        node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
-        node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
-        node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
-        node_4 = Node(NodeAttrs('v', 1.83, 0.5, False), 4)
-        node_5 = Node(NodeAttrs('v', 0.5, 0, True), 5)
-        node_6 = Node(NodeAttrs('v', 0.5, 1, True), 6)
+        node_0 = Node(NodeAttrs('v', 0, 0, False))
+        node_1 = Node(NodeAttrs('v', 1, 0, False))
+        node_2 = Node(NodeAttrs('v', 1, 1, False))
+        node_3 = Node(NodeAttrs('v', 0, 1, False))
+        node_4 = Node(NodeAttrs('v', 1.83, 0.5, False))
+        node_5 = Node(NodeAttrs('v', 0.5, 0, True))
+        node_6 = Node(NodeAttrs('v', 0.5, 1, True))
         nodes = [node_0, node_5, node_1, node_4, node_2, node_6, node_3]
         corner_nodes = (node_0, node_1, node_2, node_3, node_4)
 
         graph.add_node_collection(nodes)
 
-        graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True), 7)
+        graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True))
 
         for node_a, node_b in it.pairwise(nodes + [node_0]):
             graph.add_edge(Edge(node_a.handle, node_b.handle, EdgeAttrs(kind='e', flag=False)))
@@ -45,12 +45,10 @@ class P12(Production):
 
         # counter-clock-wise
         in_order_nodes = [graph.node_for_handle(rev_mapping[i]) for i in (0, 1, 2, 3, 4, 5, 6, 7)]
-        corner_nodes = [node for node in in_order_nodes[:-3]]
-        v_nodes = [
-            graph.node_for_handle(rev_mapping[i]) for i in (0, 3, 6, 2, 4, 1, 5, 0)
-        ]
-        hanging_node_1 = graph.node_for_handle(rev_mapping[5])
-        hanging_node_2 = graph.node_for_handle(rev_mapping[6])
+        corner_nodes = [in_order_nodes[0], in_order_nodes[2], in_order_nodes[3], in_order_nodes[4], in_order_nodes[6]]
+
+        hanging_node_1 = graph.node_for_handle(rev_mapping[1])
+        hanging_node_2 = graph.node_for_handle(rev_mapping[5])
         q_node = graph.node_for_handle(rev_mapping[7])
 
         # change hanging value of hanging node
@@ -59,7 +57,7 @@ class P12(Production):
         hanging_node_2.attrs.flag = False
 
         new_border_nodes = []
-        for node_a, node_b in ((in_order_nodes[1], in_order_nodes[4]), (in_order_nodes[4], in_order_nodes[2]), (in_order_nodes[3], in_order_nodes[0])):
+        for node_a, node_b in ((in_order_nodes[2], in_order_nodes[3]), (in_order_nodes[3], in_order_nodes[4]), (in_order_nodes[6], in_order_nodes[0])):
             x, y = util.avg_point_from_nodes((node_a, node_b))
             edge_attrs = graph.edge_attrs((node_a.handle, node_b.handle))
             h = not edge_attrs.flag
@@ -76,9 +74,6 @@ class P12(Production):
         x, y = util.avg_point_from_nodes(corner_nodes)
         central_node = Node(NodeAttrs('v', x, y, flag=False))
         graph.add_node(central_node)
-
-        node_3 = corner_nodes.pop()
-        corner_nodes.insert(2, node_3)
 
         for node in new_border_nodes + [hanging_node_1, hanging_node_2]:
             graph.add_edge(Edge(node.handle, central_node.handle, EdgeAttrs('e', False)))
