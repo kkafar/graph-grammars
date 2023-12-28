@@ -6,7 +6,7 @@ from model import Node, NodeAttrs, EdgeAttrs, Edge
 
 from production import P4
 
-class TestProduction2(unittest.TestCase):
+class TestProduction4(unittest.TestCase):
     def test_production_can_be_applied_on_lhs_graph(self):
         graph = Graph()
 
@@ -26,7 +26,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertTrue(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertTrue(list(mapping_gen))
 
     def test_production_can_be_applied_if_hanging_nodes_in_different_places(self):
         graph = Graph()
@@ -47,7 +47,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertTrue(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertTrue(list(mapping_gen))
 
     def test_production_cannot_be_applied_with_one_hanging_node(self):
         graph = Graph()
@@ -67,7 +67,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertFalse(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertFalse(list(mapping_gen))
 
     def test_production_cannot_be_applied_with_two_hanging_nodes_on_adjecent_sides(self):
         graph = Graph()
@@ -88,7 +88,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertFalse(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertFalse(list(mapping_gen))
 
     def test_production_cannot_be_applied_with_three_hanging_nodes(self):
         graph = Graph()
@@ -113,7 +113,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertFalse(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertFalse(list(mapping_gen)) 
 
     def test_production_cannot_be_applied_if_R_false(self):
         graph = Graph()
@@ -134,7 +134,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertFalse(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertFalse(list(mapping_gen))
 
     def test_production_cannot_be_applied_if_edge_types_not_match(self):
         graph = Graph()
@@ -155,7 +155,7 @@ class TestProduction2(unittest.TestCase):
 
         p4 = P4()
         mapping_gen = graph.generate_subgraphs_isomorphic_with(p4.get_lhs())
-        self.assertFalse(any(p4.is_mapping_feasible(graph, mapping) for mapping in mapping_gen))
+        self.assertFalse(list(mapping_gen))
 
 
 if __name__ == '__main__':
