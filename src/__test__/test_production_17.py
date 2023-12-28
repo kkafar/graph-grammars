@@ -15,20 +15,20 @@ class TestProduction17(unittest.TestCase):
     def test_production_can_be_applied_on_lhs_graph(self):
         graph = Graph()
 
-        node_1 = Node(NodeAttrs('v', 0, 0, False), 1)
-        node_2 = Node(NodeAttrs('v', 1, 0, False), 2)
-        node_3 = Node(NodeAttrs('v', 1, 1, False), 3)
-        node_4 = Node(NodeAttrs('v', 0, 1, False), 4)
-        node_5 = Node(NodeAttrs('v', 1, 0.5, True), 5)
-        node_6 = Node(NodeAttrs('v', 2, 0.5, False), 6)
-        node_7 = Node(NodeAttrs('v', 2, 1, False), 7)
-        node_8 = Node(NodeAttrs('v', 0.5, 0, False), 8)
+        node_1 = Node(NodeAttrs('v', 0, 0, False))
+        node_2 = Node(NodeAttrs('v', 1, 0, False))
+        node_3 = Node(NodeAttrs('v', 1, 1, False))
+        node_4 = Node(NodeAttrs('v', 0, 1, False))
+        node_5 = Node(NodeAttrs('v', 1, 0.5, True))
+        node_6 = Node(NodeAttrs('v', 2, 0.5, False))
+        node_7 = Node(NodeAttrs('v', 2, 1, False))
+        node_8 = Node(NodeAttrs('v', 0.5, 0, False))
 
         nodes = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8]
     
         graph.add_node_collection(nodes)
 
-        graph.add_p_hyperedge([node_1, node_2, node_3, node_4, node_8], EdgeAttrs('p', False), 9)
+        graph.add_p_hyperedge([node_1, node_2, node_3, node_4, node_8], EdgeAttrs('p', False))
         graph.add_q_hyperedge([node_5, node_6, node_7, node_3], EdgeAttrs('q', True))
 
         graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
@@ -39,20 +39,20 @@ class TestProduction17(unittest.TestCase):
     def test_production_can_be_applied_on_more_complex_graph(self):
         graph = Graph()
 
-        node_1 = Node(NodeAttrs('v', 0, 0, False), 1)
-        node_2 = Node(NodeAttrs('v', 1, 0, False), 2)
-        node_3 = Node(NodeAttrs('v', 1, 1, False), 3)
-        node_4 = Node(NodeAttrs('v', 0, 1, False), 4)
-        node_5 = Node(NodeAttrs('v', 1, 0.5, True), 5)
-        node_6 = Node(NodeAttrs('v', 2, 0.5, False), 6)
-        node_7 = Node(NodeAttrs('v', 2, 1, False), 7)
-        node_8 = Node(NodeAttrs('v', 0.5, 0, False), 8)
+        node_1 = Node(NodeAttrs('v', 0, 0, False))
+        node_2 = Node(NodeAttrs('v', 1, 0, False))
+        node_3 = Node(NodeAttrs('v', 1, 1, False))
+        node_4 = Node(NodeAttrs('v', 0, 1, False))
+        node_5 = Node(NodeAttrs('v', 1, 0.5, True))
+        node_6 = Node(NodeAttrs('v', 2, 0.5, False))
+        node_7 = Node(NodeAttrs('v', 2, 1, False))
+        node_8 = Node(NodeAttrs('v', 0.5, 0, False))
 
         nodes = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8]
-    
+
         graph.add_node_collection(nodes)
 
-        graph.add_p_hyperedge([node_1, node_2, node_3, node_4, node_8], EdgeAttrs('p', False), 9)
+        graph.add_p_hyperedge([node_1, node_2, node_3, node_4, node_8], EdgeAttrs('p', False))
         graph.add_q_hyperedge([node_5, node_6, node_7, node_3], EdgeAttrs('q', True))
 
         graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
