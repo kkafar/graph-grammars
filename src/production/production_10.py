@@ -31,10 +31,7 @@ class P10(Production):
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
         # Break the edges (1, 2), (2, 3), (3, 4), (4, 1), creating 4 new nodes
         # Add 5 new node to the center of the split
-        self.rev_mapping = util.reverse_dict_mapping(mapping)
-
-        # Aliasing for convenience
-        rev_mapping = self.rev_mapping
+        rev_mapping = self._rev_mapping
 
         # get square's vertices
         vertices = [
@@ -46,17 +43,14 @@ class P10(Production):
 
         # you must get edges attrs before you remove, now it is relevant
         edge = vertices[0].handle, node_h.handle
-        attrs = graph.edge_attrs(edge)
-        is_boundary = attrs.flag
-        hdl = node_h.handle
+        is_boundary = graph.edge_attrs(edge).flag
         graph.remove_node(node_h.handle)
         edge = vertices[0].handle, vertices[1].handle
-        tmp_attr = EdgeAttrs('e', is_boundary, -1)
-        # flag value is only valuable, because it will propagate through split
-        tmp_edge = Edge(edge[0], edge[1], tmp_attr)
+        # only flag value is important, because it will propagate through split
+        tmp_edge = Edge(edge[0], edge[1],  EdgeAttrs('e', is_boundary, -1))
         graph.add_edge(tmp_edge)
         # change hanging atribute of the node
-        hang = graph.split_edge_with_vnode(edge, node_flag=False, node_handle=hdl)
+        hang = graph.split_edge_with_vnode(edge, node_flag=False, node_handle=node_h.handle)
 
         # skip first pair because it already exists
         idx_nodes = [1, 4, 2, 3, 0]

@@ -28,10 +28,7 @@ class P9(Production):
     def apply_with_mapping(self, graph: Graph, mapping: Dict[NodeHandle, NodeHandle]):
         # Break the edges (1, 2), (2, 3), (3, 4), (4, 1), creating 4 new nodes
         # Add 5 new node to the center of the split
-        self.rev_mapping = util.reverse_dict_mapping(mapping)
-
-        # Aliasing for convenience
-        rev_mapping = self.rev_mapping
+        rev_mapping = self._rev_mapping
 
         # get square's vertices
         vertices = [
