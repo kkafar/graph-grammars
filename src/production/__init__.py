@@ -5,6 +5,7 @@ from .production_3 import P3
 from .production_4 import P4
 from .production_5 import P5
 from .production_6 import P6
+from .production_8 import P8
 from .production_9 import P9
 from .production_10 import P10
 from .production_13 import P13
@@ -21,6 +22,7 @@ __all__ = (
     P4,
     P5,
     P6,
+    P8,
     P9,
     P10,
     P13,
