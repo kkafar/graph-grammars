@@ -60,24 +60,3 @@ class P17(Production):
         graph.remove_p_hyperedge(node_p.handle)
 
         graph.add_p_hyperedge(corner_nodes, EdgeAttrs('p', True), node_p.handle)
-
-        # edges printing to check if graph was changed properly
-        nodes = graph.nx_graph.nodes.data()
-        count_node_q, count_node_v = 0, 0
-        for node in nodes:
-            if node[1]['payload'].label == 'q': count_node_q += 1
-            if node[1]['payload'].label == 'v': count_node_v += 1
-
-        edges = graph.nx_graph.edges.data()
-        count_e, count_p, count_q = 0, 0, 0
-        for edge in edges:
-            if edge[2]['payload'].kind == 'e': count_e += 1
-            if edge[2]['payload'].kind == 'p': count_p += 1
-            if edge[2]['payload'].kind == 'q': count_q += 1
-
-        # print(f"Number of nodes: {len(nodes)}")
-        # print(f"count_node_q: {count_node_q}, count_node_v: {count_node_v}")
-        # print(f"Number of edges: {len(edges)}")
-        # print(f"count_e: {count_e}, count_p: {count_p}, count_q: {count_q}")
-        # graph.display()
-        # plt.show()
