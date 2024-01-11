@@ -75,9 +75,9 @@ class P17(Production):
             if edge[2]['payload'].kind == 'p': count_p += 1
             if edge[2]['payload'].kind == 'q': count_q += 1
 
-        print(f"Number of nodes: {len(nodes)}")
-        print(f"count_node_q: {count_node_q}, count_node_v: {count_node_v}")
-        print(f"Number of edges: {len(edges)}")
-        print(f"count_e: {count_e}, count_p: {count_p}, count_q: {count_q}")
+        # print(f"Number of nodes: {len(nodes)}")
+        # print(f"count_node_q: {count_node_q}, count_node_v: {count_node_v}")
+        # print(f"Number of edges: {len(edges)}")
+        # print(f"count_e: {count_e}, count_p: {count_p}, count_q: {count_q}")
         # graph.display()
         # plt.show()

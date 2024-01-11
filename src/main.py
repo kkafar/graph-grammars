@@ -39,6 +39,7 @@ def main():
     args: Args = build_cli().parse_args()
     run_example(args.example_name)
 
-    
+
 if __name__ == '__main__':
     main()
+
