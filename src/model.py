@@ -25,7 +25,7 @@ class NodeAttrs:
 
 @dataclass
 class EdgeAttrs:
-    kind: Literal['e'] | Literal['q']
+    kind: Literal['e'] | Literal['q'] | Literal['p']
     flag: bool  # Interpretation of this field depends on edge kind. See presentation with project spec.
     handle: EdgeHandle = field(default_factory=it.count().__next__, init=True)
 
@@ -58,7 +58,7 @@ class Edge:
     attrs: EdgeAttrs
 
     def get_endpoints(self) -> EdgeEndpoints:
-        return EdgeEndpoints(u, v)
+        return EdgeEndpoints(self.u, self.v)
 
 
 GraphMapping = Dict[NodeHandle, NodeHandle]
