@@ -8,7 +8,7 @@ from .model import Production
 class P7(Production):
     def __init__(self) -> None:
         self.lhs: Graph = self.__create_lhs()
-        self.rev_mapping: Dict[NodeHandle, NodeHandle] | None = None
+        self._rev_mapping: Dict[NodeHandle, NodeHandle] | None = None
 
     def get_lhs(self) -> Graph:
         return self.lhs
