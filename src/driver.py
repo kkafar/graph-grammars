@@ -1,7 +1,9 @@
-from typing import Iterable
+from typing import Iterable, Callable, Optional
 from production import Production
 from graph import Graph
 from model import NodeHandle
+from pathlib import Path
+import matplotlib.pyplot as plt
 
 
 class InputProvider:
@@ -29,12 +31,80 @@ class UserInput(InputProvider):
         return int(input("NodeHandle>"))
 
 
+class DriverDelegate:
+    def on_production_success(self, prod: Production, graph: Graph):
+        pass
+
+    def on_production_failure(self, prod: Production, graph: Graph):
+        pass
+
+    def on_execution_start(self, graph: Graph, callables: Iterable[Production | InputProvider]):
+        pass
+
+    def on_execution_end(self, graph: Graph, callables: Iterable[Production | InputProvider]):
+        pass
+
+
+class DrawingDriverDelegate(DriverDelegate):
+    def __init__(self, savedir: Optional[Path]) -> None:
+        self.savedir = savedir
+        self.counter = 0
+
+    def on_execution_start(self, graph: Graph, callables: Iterable[Production | InputProvider]):
+        fig, plot = plt.subplots(nrows=1, ncols=1)
+        graph.display(ax=plot)
+        plot.set(title='Graph before applying production sequence')
+        if self.savedir is not None:
+            savefile = self.savedir.joinpath('graph_before.png')
+            fig.tight_layout()
+            fig.savefig(savefile)
+            plt.close(fig)
+
+
+    def on_production_success(self, prod: Production, graph: Graph):
+        print(f'Successfully applied {prod}')
+        fig, plot = plt.subplots(nrows=1, ncols=1)
+        graph.display(ax=plot)
+        plot.set(title=f'Graph after {prod}')
+
+        if self.savedir is not None:
+            savefile = self.savedir.joinpath(f'graph_after_prod_{self.counter}_{prod}.png')
+            self.counter += 1
+            fig.tight_layout()
+            plt.savefig(savefile)
+            plt.close(fig)
+
+
+    def on_execution_end(self, graph: Graph, callables: Iterable[Production | InputProvider]):
+        fig, plot = plt.subplots(nrows=1, ncols=1)
+        graph.display(ax=plot)
+        plot.set(title='Graph after applying production sequence')
+        if self.savedir is not None:
+            savefile = self.savedir.joinpath('graph_after.png')
+            fig.tight_layout()
+            fig.savefig(savefile)
+            plt.close(fig)
+
+
+
 class Driver:
-    def execute_production_sequence(self, graph: Graph, prods: Iterable[Production | InputProvider]):
-        for prod in prods:
-            if isinstance(prod, Production):
-                assert prod(graph)
-            elif isinstance(prod, InputProvider):
-                graph.update_hyperedge_flag(prod(), True)
+    def __init__(self, delegate = DriverDelegate()) -> None:
+        self.delegate = delegate
+
+    def execute_production_sequence(self, graph: Graph, callables: Iterable[Production | InputProvider]):
+        self.delegate.on_execution_start(graph, callables)
+        for func in callables:
+            if isinstance(func, Production):
+                if func(graph):
+                    self.delegate.on_production_success(func, graph)
+                else:
+                    self.delegate.on_production_failure(func, graph)
+                    assert False, f"Production {func} failed"
+
+            elif isinstance(func, InputProvider):
+                graph.update_hyperedge_flag(func(), True)
             else:
                 raise RuntimeError("HEHE")
+
+        self.delegate.on_execution_end(graph, callables)
+
