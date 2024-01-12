@@ -162,6 +162,10 @@ class Graph:
         nx.draw_networkx(self.nx_graph, pos=positions, labels=node_labels, **kwargs)
         nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
 
+        flag_true_nodes = list(filter(lambda handle: self[handle].flag == True, self._graph.nodes))
+
+        nx.draw_networkx_nodes(self.nx_graph, pos=positions, node_color='#FF0000', nodelist=flag_true_nodes)
+
 
     def add_q_hyperedge(self, nodes: tuple[Node, Node, Node, Node], edge_attrs: EdgeAttrs, q_node_handle: NodeHandle = None) -> NodeHandle:
         """ Add Q-hyperedge to the graph.
@@ -259,7 +263,7 @@ class Graph:
         self.add_edge(Edge(h_node.handle, edge[1], EdgeAttrs(kind='e', flag=edge_attrs.flag)))
 
         return h_node
-    
+
     def get_node_between(self, nodes: tuple[NodeHandle, NodeHandle]) -> Node:
         """ Returns node that is between two given nodes.
             Fails if there is no such node or there are more than one.
@@ -267,19 +271,19 @@ class Graph:
         path = nx.shortest_path(self._graph, nodes[0], nodes[1])
         assert(len(path)) == 3
         return self.node_for_handle(path[1])
-    
+
     def get_nodes(self) -> list[Node]:
         """ Returns list of all nodes in the graph."""
         return list(map(lambda node: Node(node[1], node[0]), self._graph.nodes(data='payload')))
-    
+
     def get_edges(self) -> list[Edge]:
         """ Returns list of all edges in the graph."""
         return list(map(lambda edge: Edge(edge[0], edge[1], edge[2]), self._graph.edges(data='payload')))
-    
+
     def get_real_nodes(self) -> list[Node]:
         """ Returns list of all real nodes (without hyperedges) in the graph."""
         return list(filter(lambda node: node.attrs.label == 'v', self.get_nodes()))
-    
+
     def get_hyperedge_nodes(self) -> list[Node]:
         """ Returns list of all 'fake' hyperedge nodes in the graph."""
         return list(filter(lambda node: node.attrs.label in ('p', 'q'), self.get_nodes()))
@@ -287,7 +291,7 @@ class Graph:
     def get_real_edges(self) -> list[Edge]:
         """ Returns list of all real edges (without hyperedges) in the graph."""
         return list(filter(lambda edge: edge.attrs.kind == 'e', self.get_edges()))
-    
+
     def get_hyperedge_edges(self) -> list[Edge]:
         """ Returns list of all 'fake' hyperedge edges in the graph."""
         return list(filter(lambda edge: edge.attrs.kind in ('p', 'q'), self.get_edges()))
@@ -323,3 +327,7 @@ class Graph:
         handle = self._node_handle_factory()
         return handle
 
+
+def filter_node(node):
+    print(type(node))
+    return True

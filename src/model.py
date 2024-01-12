@@ -20,7 +20,8 @@ class NodeAttrs:
     flag: bool  # Interpretation of this field depends on edge kind. See presentation with project spec
 
     def __str__(self, i: int = None) -> str:
-        return (f'{i}, ' if i is not None else '') + f'{self.label}, {self.flag}\nx={self.x}, y={self.y}'
+        # return (f'{i}, ' if i is not None else '') + f'{self.label}, {self.flag}'
+        return (f'{self.label},{i},{self.flag}')
 
 
 @dataclass
@@ -30,7 +31,7 @@ class EdgeAttrs:
     handle: EdgeHandle = field(default_factory=it.count().__next__, init=True)
 
     def __str__(self) -> str:
-        return f'{self.kind}, {self.flag}, {self.handle}'
+        return f'{self.flag}'
 
 
 class Node:
@@ -63,3 +64,10 @@ class Edge:
 
 GraphMapping = Dict[NodeHandle, NodeHandle]
 
+
+class UserInput:
+    def __init__(self, id: NodeHandle) -> None:
+        self.id = id
+
+    def __call__(self) -> NodeHandle:
+        return self.id
