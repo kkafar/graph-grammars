@@ -35,7 +35,6 @@ class Driver:
             if isinstance(prod, Production):
                 assert prod(graph)
             elif isinstance(prod, InputProvider):
-                id = prod()
-                graph.update_hyperedge_flag(id, True)
+                graph.update_hyperedge_flag(prod(), True)
             else:
                 raise RuntimeError("HEHE")
