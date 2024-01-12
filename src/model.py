@@ -17,7 +17,7 @@ class NodeAttrs:
     label: Literal['v'] | Literal['q'] | Literal['p']
     x: float
     y: float
-    flag: bool  # Interpretation of this field depends on edge kind. See presentation with project spec
+    flag: Optional[bool]  # Interpretation of this field depends on edge kind. See presentation with project spec
 
     def __str__(self, i: int = None) -> str:
         # return (f'{i}, ' if i is not None else '') + f'{self.label}, {self.flag}'
@@ -64,10 +64,3 @@ class Edge:
 
 GraphMapping = Dict[NodeHandle, NodeHandle]
 
-
-class UserInput:
-    def __init__(self, id: NodeHandle) -> None:
-        self.id = id
-
-    def __call__(self) -> NodeHandle:
-        return self.id

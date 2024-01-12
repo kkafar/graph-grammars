@@ -1,8 +1,14 @@
 from typing import Iterable
 from production import Production
 from graph import Graph
-from model import NodeHandle, UserInput
+from model import NodeHandle
 
+class UserInput:
+    def __init__(self, id: NodeHandle) -> None:
+        self.id = id
+
+    def __call__(self) -> NodeHandle:
+        return self.id
 
 class Driver:
     def __init__(self) -> None:

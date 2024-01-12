@@ -23,13 +23,13 @@ class P8(Production):
     def __create_lhs(self) -> Graph:
         graph = Graph()
 
-        node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
-        node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
-        node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
-        node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
+        node_0 = Node(NodeAttrs('v', 0, 0, None), 0)
+        node_1 = Node(NodeAttrs('v', 1, 0, None), 1)
+        node_2 = Node(NodeAttrs('v', 1, 1, None), 2)
+        node_3 = Node(NodeAttrs('v', 0, 1, None), 3)
         node_4 = Node(NodeAttrs('v', 1, 0.5, True), 4)
-        node_5 = Node(NodeAttrs('v', 2, 0.5, False), 5)
-        node_6 = Node(NodeAttrs('v', 2, 1, False), 6)
+        node_5 = Node(NodeAttrs('v', 2, 0.5, None), 5)
+        node_6 = Node(NodeAttrs('v', 2, 1, None), 6)
         nodes = [node_0, node_1, node_4, node_2, node_3, node_5, node_6]
         corner_nodes1 = (node_0, node_1, node_2, node_3)
         corner_nodes2 = (node_4, node_5, node_6, node_2)

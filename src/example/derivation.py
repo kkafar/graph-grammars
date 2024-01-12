@@ -3,15 +3,14 @@ from production import (
     Production,
     P9, P8, P16, P7, P2, P1, P3
 )
-from model import Node, NodeAttrs, Edge, EdgeAttrs, UserInput
-from driver import Driver
+from model import Node, NodeAttrs, Edge, EdgeAttrs
+from driver import Driver, UserInput
 import itertools as it
 import matplotlib.pyplot as plt
 import basic_graph as gu
 
 
-
-def main():
+def create_graph() -> Graph:
     graph = Graph()
 
     inner_nodes = [
@@ -48,12 +47,14 @@ def main():
     for (node_a, node_b), (node_c, node_d) in zip(it.pairwise(inner_nodes + [inner_nodes[0]]), it.pairwise(outer_nodes + [outer_nodes[0]])):
         graph.add_q_hyperedge((node_a, node_b, node_c, node_d), EdgeAttrs('q', False))
 
-    # graph.display()
+    return graph
 
+
+def main():
+    graph = create_graph()
     driver = Driver()
 
-    driver.execute_production_sequence(graph, [P16(), P9(), UserInput(23)])
-
+    driver.execute_production_sequence(graph, [P16(), P9(), UserInput(23), P8(), P8(), P2(), P3(), P1(), UserInput(46), P8(), P8(), P2(), P3(), P1()])
 
     graph.display()
 

@@ -14,10 +14,16 @@ def node_equality(nx_node_attrs_1, nx_node_attrs_2) -> bool:
     attrs_1: NodeAttrs = nx_node_attrs_1['payload']
     attrs_2: NodeAttrs = nx_node_attrs_2['payload']
 
-    return (
-        attrs_1.label == attrs_2.label and
-        attrs_1.flag == attrs_2.flag
-    )
+    label_match = attrs_1.label == attrs_2.label
+    
+    if attrs_1.flag is not None and attrs_2.flag is not None:
+        return (
+            attrs_1.label == attrs_2.label and
+            attrs_1.flag == attrs_2.flag
+        )
+    else:
+        return label_match
+
 
 
 def edge_equality(nx_edge_attrs_1, nx_edge_attrs_2) -> bool:
