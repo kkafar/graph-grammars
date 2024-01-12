@@ -15,12 +15,9 @@ def node_equality(nx_node_attrs_1, nx_node_attrs_2) -> bool:
     attrs_2: NodeAttrs = nx_node_attrs_2['payload']
 
     label_match = attrs_1.label == attrs_2.label
-    
+
     if attrs_1.flag is not None and attrs_2.flag is not None:
-        return (
-            attrs_1.label == attrs_2.label and
-            attrs_1.flag == attrs_2.flag
-        )
+        return label_match and attrs_1.flag == attrs_2.flag
     else:
         return label_match
 
