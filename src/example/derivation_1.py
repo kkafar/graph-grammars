@@ -60,7 +60,7 @@ class AxesProvider:
         return axes
 
 def main():
-    savedir = Path('derivation_1/')
+    savedir = Path('docs/derivation_1/')
     if not savedir.is_dir():
         savedir.mkdir(parents=True)
 
