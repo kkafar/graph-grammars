@@ -4,7 +4,7 @@ from production import (
     P9, P8, P16, P7, P2, P1, P3
 )
 from model import Node, NodeAttrs, Edge, EdgeAttrs
-from driver import Driver, UserInput
+from driver import Driver, FixedInput
 import itertools as it
 import matplotlib.pyplot as plt
 import basic_graph as gu
@@ -54,7 +54,22 @@ def main():
     graph = create_graph()
     driver = Driver()
 
-    driver.execute_production_sequence(graph, [P16(), P9(), UserInput(23), P8(), P8(), P2(), P3(), P1(), UserInput(46), P8(), P8(), P2(), P3(), P1()])
+    driver.execute_production_sequence(graph, [
+        P16(),
+        P9(),
+        FixedInput(23),  # we mark node with handle == 23 for breaking (the hyperedge's flag is set to True)
+        P8(),
+        P8(),
+        P2(),
+        P3(),
+        P1(),
+        FixedInput(46),
+        P8(),
+        P8(),
+        P2(),
+        P3(),
+        P1()
+    ])
 
     graph.display()
 
