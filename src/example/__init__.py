@@ -7,8 +7,11 @@ from example import (
     production_6,
     production_9,
     production_10,
+    production_11,
+    production_12,
     production_13,
     production_16,
+    production_17,
 )
 
 __all__ = (
@@ -20,8 +23,11 @@ __all__ = (
     production_6,
     production_9,
     production_10,
+    production_11,
+    production_12,
     production_13,
     production_16,
+    production_17,
 )
 
 
