@@ -330,7 +330,3 @@ class Graph:
         handle = self._node_handle_factory()
         return handle
 
-
-def filter_node(node):
-    print(type(node))
-    return True
