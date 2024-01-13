@@ -22,10 +22,10 @@ class P7(Production):
     def __create_lhs(self) -> Graph:
         graph = Graph()
 
-        node_0 = Node(NodeAttrs('v', 0, 0, False), 0)
-        node_1 = Node(NodeAttrs('v', 1, 0, False), 1)
-        node_2 = Node(NodeAttrs('v', 1, 1, False), 2)
-        node_3 = Node(NodeAttrs('v', 0, 1, False), 3)
+        node_0 = Node(NodeAttrs('v', 0, 0, None), 0)
+        node_1 = Node(NodeAttrs('v', 1, 0, None), 1)
+        node_2 = Node(NodeAttrs('v', 1, 1, None), 2)
+        node_3 = Node(NodeAttrs('v', 0, 1, None), 3)
         nodes = [node_0, node_1, node_2, node_3]
         graph.add_node_collection(nodes)
         graph.add_q_hyperedge(nodes, EdgeAttrs('q', False), 4)
