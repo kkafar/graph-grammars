@@ -77,3 +77,9 @@ class Production:
         """
         return False
 
+
+    def __str__(self) -> str:
+        return type(self).__name__
+
+
+    
