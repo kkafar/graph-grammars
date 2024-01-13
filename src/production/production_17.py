@@ -21,14 +21,14 @@ class P17(Production):
     def __create_lhs(self) -> Graph:
         graph = Graph()
 
-        node_1 = Node(NodeAttrs('v', 0, 0, False))
-        node_2 = Node(NodeAttrs('v', 1, 0, False))
-        node_3 = Node(NodeAttrs('v', 1, 1, False))
-        node_4 = Node(NodeAttrs('v', 0, 1, False))
+        node_1 = Node(NodeAttrs('v', 0, 0, None))
+        node_2 = Node(NodeAttrs('v', 1, 0, None))
+        node_3 = Node(NodeAttrs('v', 1, 1, None))
+        node_4 = Node(NodeAttrs('v', 0, 1, None))
         node_5 = Node(NodeAttrs('v', 1, 0.5, True))
-        node_6 = Node(NodeAttrs('v', 2, 0.5, False))
-        node_7 = Node(NodeAttrs('v', 2, 1, False))
-        node_8 = Node(NodeAttrs('v', 0.5, 0, False))
+        node_6 = Node(NodeAttrs('v', 2, 0.5, None))
+        node_7 = Node(NodeAttrs('v', 2, 1, None))
+        node_8 = Node(NodeAttrs('v', 0.5, 0, None))
 
         nodes = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8]
     

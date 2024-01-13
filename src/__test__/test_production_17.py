@@ -207,7 +207,7 @@ class TestProduction17(unittest.TestCase):
             
         self.assertFalse(self.is_any_mapping_feasible(graph))
 
-    def test_production_cannot_be_applied_if_one_more_node_is_hanging(self):
+    def test_production_can_be_applied_if_one_more_node_is_hanging(self):
         graph = Graph()
 
         node_1 = Node(NodeAttrs('v', 0, 0, True), 1)
@@ -229,7 +229,7 @@ class TestProduction17(unittest.TestCase):
         graph.add_edge(Edge(node_2.handle, node_5.handle, EdgeAttrs(kind='e', flag=False)))
         graph.add_edge(Edge(node_5.handle, node_3.handle, EdgeAttrs(kind='e', flag=False)))
             
-        self.assertFalse(self.is_any_mapping_feasible(graph))
+        self.assertTrue(self.is_any_mapping_feasible(graph))
 
 
 if __name__ == '__main__':
