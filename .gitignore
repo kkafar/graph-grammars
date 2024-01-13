@@ -7,4 +7,5 @@ venv/
 *.png
 *.dot
 __pycache__/
+derivation_test.py
 # !docs/**/*.png
