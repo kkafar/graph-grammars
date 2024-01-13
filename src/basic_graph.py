@@ -47,11 +47,11 @@ def basic_star5(for_lhs=False, select_central=False):
     graph = Graph()
 
     if for_lhs:
-        node_1 = Node(NodeAttrs('v', 0, 0, False), 0)
-        node_2 = Node(NodeAttrs('v', 1, 0, False), 1)
-        node_3 = Node(NodeAttrs('v', 1, 1, False), 2)
-        node_4 = Node(NodeAttrs('v', 0, 1, False), 3)
-        node_5 = Node(NodeAttrs('v', 1.3, 0.5, False), 4)
+        node_1 = Node(NodeAttrs('v', 0, 0, None), 0)
+        node_2 = Node(NodeAttrs('v', 1, 0, None), 1)
+        node_3 = Node(NodeAttrs('v', 1, 1, None), 2)
+        node_4 = Node(NodeAttrs('v', 0, 1, None), 3)
+        node_5 = Node(NodeAttrs('v', 1.3, 0.5, None), 4)
         node_p = Node(NodeAttrs('p', 0.5, 0.5, select_central), 5)
     else:
         node_1 = Node(NodeAttrs('v', 0, 0, False))
