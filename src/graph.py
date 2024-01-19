@@ -181,11 +181,6 @@ class Graph:
             u: str(u) for u in self._graph.nodes
         }
 
-        # nx.draw_networkx(self.nx_graph, pos=positions, labels=node_labels, **kwargs)
-        # nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
-
-        # nodes_with_true_flag = [handle for handle in self._graph.nodes if self[handle].flag == True]
-
         for node_type in 'vqp':
             shape = 'o'
             if node_type == 'q':
@@ -195,37 +190,33 @@ class Graph:
 
             for flag_value in (True, False, None):
                 color = '#66bb6a' if flag_value == True else '#bdbdbd'
-
-                nodes_to_draw = list(filter(self.__filter(node_type, flag_value), self._graph.nodes))
-
-                # nx.draw_networkx(self.nx_graph, pos=positions, node_color=color, node_shape=shape, nodelist=nodes_to_draw, labels=node_labels)
+                nodes_to_draw = list(filter(self.__filter_node(node_type, flag_value), self._graph.nodes))
                 nx.draw_networkx_nodes(self.nx_graph, pos=positions, node_color=color, node_shape=shape, nodelist=nodes_to_draw, label=node_type)
 
         nx.draw_networkx_labels(self.nx_graph, pos=positions)
 
-        e_edges = list(filter(self.__edge_filter('e'), self._graph.edges))
+        e_edges = list(filter(self.__filter_edge('e'), self._graph.edges))
         nx.draw_networkx_edges(self.nx_graph, pos=positions, edgelist=e_edges)
 
-        other_edges = list(filter(self.__edge_filter('pq'), self._graph.edges))
+        other_edges = list(filter(self.__filter_edge('pq'), self._graph.edges))
         nx.draw_networkx_edges(self.nx_graph, pos=positions, edgelist=other_edges, style=':')
 
 
 
-    def __filter(self, node_type: str, flag_value: Optional[bool]) -> bool:
+    def __filter_node(self, node_type: str, flag_value: Optional[bool]) -> bool:
         def __actual_filter(handle: NodeHandle) -> bool:
             attrs = self[handle]
             return attrs.label == node_type and attrs.flag == flag_value
 
         return __actual_filter
 
-    def __edge_filter(self, edge_types: Iterable):
+
+    def __filter_edge(self, edge_types: Iterable):
         def __actual_filter(endpoints: EdgeEndpoints) -> bool:
             attrs = self.edge_attrs(endpoints)
             return attrs.kind in edge_types
 
         return __actual_filter
-
-
 
 
     def add_q_hyperedge(self, nodes: tuple[Node, Node, Node, Node], edge_attrs: EdgeAttrs, q_node_handle: NodeHandle = None) -> NodeHandle:
