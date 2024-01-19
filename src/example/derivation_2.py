@@ -96,4 +96,4 @@ def main():
     ])
 
     graph.display()
-    plt.savefig("control.png")
+    plt.savefig("control_result.png")

@@ -162,12 +162,12 @@ class Graph:
             u: self.node_attrs(u).__str__(u) for u in self._graph.nodes
         }
 
-        nx.draw_networkx(self.nx_graph, pos=positions, labels=node_labels, **kwargs)
-        nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
+        nx.draw_networkx(self.nx_graph, pos=positions, labels=node_labels, node_size = 3, **kwargs)
+        # nx.draw_networkx_edge_labels(self.nx_graph, pos=positions, edge_labels=edge_labels, **kwargs)
 
         flag_true_nodes = list(filter(lambda handle: self[handle].flag == True, self._graph.nodes))
 
-        nx.draw_networkx_nodes(self.nx_graph, pos=positions, node_color='#FF0000', nodelist=flag_true_nodes)
+        nx.draw_networkx_nodes(self.nx_graph, pos=positions, node_color='#FF0000', node_size = 3, nodelist=flag_true_nodes)
 
 
     def add_q_hyperedge(self, nodes: tuple[Node, Node, Node, Node], edge_attrs: EdgeAttrs, q_node_handle: NodeHandle = None) -> NodeHandle:
