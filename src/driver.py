@@ -72,7 +72,6 @@ class DrawingDriverDelegate(DriverDelegate):
         plot.set(title=f'Graph after {prod}')
 
         if self.savedir is not None:
-            print(self.counter)
             savefile = self.savedir.joinpath(f'{self.counter}_graph_after_prod_{prod}.png')
             self.counter += 1
             fig.tight_layout()
@@ -95,7 +94,6 @@ class DrawingDriverDelegate(DriverDelegate):
         graph.display(newstyle=self.newstyle, ax=plot)
         plot.set(title=f'Graph after user manually marked {user_input} to break')
         if self.savedir is not None:
-            print(self.counter)
             savefile = self.savedir.joinpath(f'{self.counter}_graph_after_mi.png')
             self.counter += 1
             fig.tight_layout()
