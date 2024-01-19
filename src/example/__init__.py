@@ -14,6 +14,7 @@ from example import (
     production_17,
     derivation_1,
     derivation_3,
+    derivation_4,
 )
 
 __all__ = (
@@ -31,7 +32,8 @@ __all__ = (
     production_16,
     production_17,
     derivation_1,
-    derivation_3
+    derivation_3,
+    derivation_4
 )
 
 
