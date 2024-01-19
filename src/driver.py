@@ -28,7 +28,7 @@ class UserInput(InputProvider):
     """ Use this class to let user decide what node should be marked for breaking.
     """
     def __call__(self) -> NodeHandle:
-        return int(input("NodeHandle>"))
+        return int(input("NodeHandle> "))
 
 
 class DriverDelegate:
@@ -44,15 +44,19 @@ class DriverDelegate:
     def on_execution_end(self, graph: Graph, callables: Iterable[Production | InputProvider]):
         pass
 
+    def on_manual_input(self, graph: Graph, user_input: NodeHandle):
+        pass
+
 
 class DrawingDriverDelegate(DriverDelegate):
-    def __init__(self, savedir: Optional[Path]) -> None:
+    def __init__(self, savedir: Optional[Path], newstyleplot: bool = True) -> None:
         self.savedir = savedir
+        self.newstyle = newstyleplot
         self.counter = 0
 
     def on_execution_start(self, graph: Graph, callables: Iterable[Production | InputProvider]):
         fig, plot = plt.subplots(nrows=1, ncols=1)
-        graph.display(ax=plot)
+        graph.display(newstyle=self.newstyle, ax=plot)
         plot.set(title='Graph before applying production sequence')
         if self.savedir is not None:
             savefile = self.savedir.joinpath('graph_before.png')
@@ -64,11 +68,12 @@ class DrawingDriverDelegate(DriverDelegate):
     def on_production_success(self, prod: Production, graph: Graph):
         print(f'Successfully applied {prod}')
         fig, plot = plt.subplots(nrows=1, ncols=1)
-        graph.display(ax=plot)
+        graph.display(newstyle=self.newstyle, ax=plot)
         plot.set(title=f'Graph after {prod}')
 
         if self.savedir is not None:
-            savefile = self.savedir.joinpath(f'graph_after_prod_{self.counter}_{prod}.png')
+            print(self.counter)
+            savefile = self.savedir.joinpath(f'{self.counter}_graph_after_prod_{prod}.png')
             self.counter += 1
             fig.tight_layout()
             plt.savefig(savefile)
@@ -77,10 +82,22 @@ class DrawingDriverDelegate(DriverDelegate):
 
     def on_execution_end(self, graph: Graph, callables: Iterable[Production | InputProvider]):
         fig, plot = plt.subplots(nrows=1, ncols=1)
-        graph.display(ax=plot)
+        graph.display(newstyle=self.newstyle, ax=plot)
         plot.set(title='Graph after applying production sequence')
         if self.savedir is not None:
             savefile = self.savedir.joinpath('graph_after.png')
+            fig.tight_layout()
+            fig.savefig(savefile)
+            plt.close(fig)
+
+    def on_manual_input(self, graph: Graph, user_input: NodeHandle):
+        fig, plot = plt.subplots(nrows=1, ncols=1)
+        graph.display(newstyle=self.newstyle, ax=plot)
+        plot.set(title=f'Graph after user manually marked {user_input} to break')
+        if self.savedir is not None:
+            print(self.counter)
+            savefile = self.savedir.joinpath(f'{self.counter}_graph_after_mi.png')
+            self.counter += 1
             fig.tight_layout()
             fig.savefig(savefile)
             plt.close(fig)
@@ -102,7 +119,9 @@ class Driver:
                     assert False, f"Production {func} failed"
 
             elif isinstance(func, InputProvider):
-                graph.update_hyperedge_flag(func(), True)
+                user_input = func()
+                graph.update_hyperedge_flag(user_input, True)
+                self.delegate.on_manual_input(graph, user_input)
             else:
                 raise RuntimeError("HEHE")
 

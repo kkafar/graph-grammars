@@ -22,6 +22,7 @@ class NodeAttrs:
     def __str__(self, i: int = None) -> str:
         # return (f'{i}, ' if i is not None else '') + f'{self.label}, {self.flag}'
         return (f'{self.label},{i},{self.flag}')
+        # return (f'{i}')
 
 
 @dataclass
