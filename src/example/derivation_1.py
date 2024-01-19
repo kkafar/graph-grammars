@@ -65,8 +65,6 @@ def main():
         savedir.mkdir(parents=True)
 
     graph = create_graph()
-    graph.display()
-    plt.show()
 
     driver = Driver()
     driver.delegate = DrawingDriverDelegate(savedir)
